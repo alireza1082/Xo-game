@@ -1,8 +1,10 @@
 package com.example.android.xo;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -27,6 +29,7 @@ public class GameBoard extends AppCompatActivity {
         //        LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
 //        inflater.inflate(R.layout.board , null);
 //        LayoutInflater.from(getApplicationContext()).inflate(R.layout.board , null , true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         if (Math.random() < 0.5)
             active_player = x_player;
         else
@@ -73,5 +76,13 @@ public class GameBoard extends AppCompatActivity {
                 return false;
         }
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
