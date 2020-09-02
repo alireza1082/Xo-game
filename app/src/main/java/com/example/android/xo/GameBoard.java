@@ -27,8 +27,7 @@ public class GameBoard extends AppCompatActivity {
         //        LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
 //        inflater.inflate(R.layout.board , null);
 //        LayoutInflater.from(getApplicationContext()).inflate(R.layout.board , null , true);
-        Random random = new Random();
-        if (random.nextInt(9) < 5)
+        if (Math.random() < 0.5)
             active_player = x_player;
         else
             active_player = o_player;
