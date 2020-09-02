@@ -23,13 +23,13 @@ android:orientation="vertical"
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/X"
+        android:src="@drawable/O"
         android:layout_weight="1"
         android:layout_margin="10dp"/>
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/X"
+        android:src="@drawable/O"
         android:layout_weight="1"
         android:layout_margin="10dp"/>
 </LinearLayout>
@@ -41,19 +41,19 @@ android:orientation="vertical"
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/X"
+        android:src="@drawable/O"
         android:layout_margin="10dp"
         android:layout_weight="1"/>
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/X"
+        android:src="@drawable/O"
         android:layout_margin="10dp"
         android:layout_weight="1"/>
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/X"
+        android:src="@drawable/O"
         android:layout_margin="10dp"
         android:layout_weight="1"/>
 </LinearLayout>
@@ -65,19 +65,19 @@ android:orientation="vertical"
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/X"
+        android:src="@drawable/O"
         android:layout_margin="10dp"
         android:layout_weight="1"/>
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/X"
+        android:src="@drawable/O"
         android:layout_margin="10dp"
         android:layout_weight="1"/>
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/X"
+        android:src="@drawable/O"
         android:layout_margin="10dp"
         android:layout_weight="1"/>
 </LinearLayout>
