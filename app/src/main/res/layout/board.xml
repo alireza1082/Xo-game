@@ -1,91 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="match_parent"
-android:layout_height="400dp"
-android:background="@drawable/board"
-android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="400dp"
+    android:layout_margin="10dp"
+    android:background="@drawable/board"
+    android:orientation="vertical"
     android:layout_centerInParent="true"
     android:layout_gravity="center"
     android:weightSum="3">
 <LinearLayout
-    android:layout_height="wrap_content"
-    android:layout_width="wrap_content"
+    android:layout_height="0dp"
+    android:layout_width="match_parent"
     android:orientation="horizontal"
     android:layout_weight="1">
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/x"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:layout_margin="10dp"
-        android:onClick="click"/>
+        android:onClick="click"
+        android:tag="0"/>
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/x"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:layout_margin="10dp"
-        android:onClick="click"/>
+        android:onClick="click"
+        android:tag="1"/>
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/x"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:layout_margin="10dp"
-        android:onClick="click"/>
+        android:onClick="click"
+        android:tag="2"/>
 </LinearLayout>
 <LinearLayout
     android:layout_weight="1"
-    android:layout_height="wrap_content"
-    android:layout_width="wrap_content"
+    android:layout_height="0dp"
+    android:layout_width="match_parent"
     android:orientation="horizontal">
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/x"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:layout_margin="10dp"
         android:layout_weight="1"
-        android:onClick="click"/>
+        android:onClick="click"
+        android:tag="3"/>
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/x"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:layout_margin="10dp"
         android:layout_weight="1"
-        android:onClick="click"/>
+        android:onClick="click"
+        android:tag="4"/>
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/x"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:layout_margin="10dp"
         android:layout_weight="1"
-        android:onClick="click"/>
+        android:onClick="click"
+        android:tag="5"/>
 </LinearLayout>
 <LinearLayout
-    android:layout_height="wrap_content"
-    android:layout_width="wrap_content"
+    android:layout_height="0dp"
+    android:layout_width="match_parent"
     android:orientation="horizontal"
     android:layout_weight="1">
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/x"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:layout_margin="10dp"
         android:layout_weight="1"
-        android:onClick="click"/>
+        android:onClick="click"
+        android:tag="6"/>
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/x"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:layout_margin="10dp"
         android:layout_weight="1"
-        android:onClick="click"/>
+        android:onClick="click"
+        android:tag="7"/>
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/x"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:layout_margin="10dp"
         android:layout_weight="1"
-        android:onClick="click"/>
+        android:onClick="click"
+        android:tag="8"/>
 </LinearLayout>
 </LinearLayout>
