@@ -55,6 +55,8 @@ public class GameBoard extends AppCompatActivity {
         if (winner != No_Winner){
             Toast.makeText(this , "winner : " + ((winner == x_player) ? "x player" : "o player") , Toast.LENGTH_SHORT ).show();
         }
+        if (filled() || winner != No_Winner)
+            finish();
     }
 
     public int checkWinner(){
@@ -64,5 +66,12 @@ public class GameBoard extends AppCompatActivity {
             }
         }
         return No_Winner;
+    }
+    public boolean filled(){
+        for (int i = 0 ; i < status.length ; i++){
+            if (status[i] == empty)
+                return false;
+        }
+        return true;
     }
 }
