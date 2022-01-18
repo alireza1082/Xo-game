@@ -7,9 +7,8 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.Random;
 
 public class GameBoard extends AppCompatActivity {
 
@@ -22,20 +21,27 @@ public class GameBoard extends AppCompatActivity {
     int active_player;
     int [][] winner_state = {{0,1,2} , {3,4,5} , {6,7,8} , {0,3,6} , {1,4,7} , {2,5,8} , {0,4,8} , {2,4,6}};
 
+    private Long backPressedTime = 0L;
+    TextView current;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.board);
-        //        LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+//        LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
 //        inflater.inflate(R.layout.board , null);
 //        LayoutInflater.from(getApplicationContext()).inflate(R.layout.board , null , true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         if (Math.random() < 0.5)
             active_player = x_player;
         else
             active_player = o_player;
         Toast.makeText(this , "first player is : " + (active_player == x_player ? "X" : "O") , Toast.LENGTH_LONG).show();
-
+        current = findViewById(R.id.current_player);
+        if (active_player == x_player)
+            current.setText("current player is:X player");
+        else
+            current.setText("current player is:O player");
     }
     public void click(View view){
         ImageView image = (ImageView) view;
@@ -71,8 +77,8 @@ public class GameBoard extends AppCompatActivity {
         return No_Winner;
     }
     public boolean filled(){
-        for (int i = 0 ; i < status.length ; i++){
-            if (status[i] == empty)
+        for (int j : status) {
+            if (j == empty)
                 return false;
         }
         return true;
@@ -84,5 +90,16 @@ public class GameBoard extends AppCompatActivity {
             finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (backPressedTime + 3000 > System.currentTimeMillis()) {
+            super.onBackPressed();
+            finish();
+        } else {
+            Toast.makeText(this, "Press back again to leave the app.", Toast.LENGTH_LONG).show();
+        }
+        backPressedTime = System.currentTimeMillis();
     }
 }
