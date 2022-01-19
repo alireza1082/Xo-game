@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Xo</string>
     <string name="about_us">Xo Game</string>
+    <string name="start">start</string>
 </resources>
