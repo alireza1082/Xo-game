@@ -39,9 +39,9 @@ public class GameBoard extends AppCompatActivity {
         Toast.makeText(this , "first player is : " + (active_player == x_player ? "X" : "O") , Toast.LENGTH_LONG).show();
         current = findViewById(R.id.current_player);
         if (active_player == x_player)
-            current.setText("current player is: X player");
+            current.setText(R.string.current_x);
         else
-            current.setText("current player is: O player");
+            current.setText(R.string.current_o);
     }
     public void click(View view){
         ImageView image = (ImageView) view;

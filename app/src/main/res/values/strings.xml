@@ -2,4 +2,6 @@
     <string name="app_name">Xo</string>
     <string name="about_us">Xo Game</string>
     <string name="start">start</string>
+    <string name="current_x">current player is: X player</string>
+    <string name="current_o">current player is: O player</string>
 </resources>
