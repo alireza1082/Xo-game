@@ -23,6 +23,8 @@ public class GameBoard extends AppCompatActivity {
 
     private Long backPressedTime = 0L;
     TextView current;
+    TextView x_point;
+    TextView o_point;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +40,16 @@ public class GameBoard extends AppCompatActivity {
             active_player = o_player;
         Toast.makeText(this , "first player is : " + (active_player == x_player ? "X" : "O") , Toast.LENGTH_LONG).show();
         current = findViewById(R.id.current_player);
+        x_point = findViewById(R.id.x_point);
+        o_point = findViewById(R.id.o_point);
+
         if (active_player == x_player)
             current.setText(R.string.current_x);
         else
             current.setText(R.string.current_o);
+
     }
+
     public void click(View view){
         ImageView image = (ImageView) view;
         int num = Integer.parseInt((String) view.getTag());
