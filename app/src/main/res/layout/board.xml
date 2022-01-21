@@ -63,6 +63,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:id="@+id/c0"
         android:layout_margin="10dp"
         android:onClick="click"
         android:tag="0"/>
@@ -70,6 +71,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:id="@+id/c1"
         android:layout_margin="10dp"
         android:onClick="click"
         android:tag="1"/>
@@ -77,6 +79,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:id="@+id/c2"
         android:layout_margin="10dp"
         android:onClick="click"
         android:tag="2"/>
@@ -91,6 +94,7 @@
         android:layout_height="match_parent"
         android:layout_margin="10dp"
         android:layout_weight="1"
+        android:id="@+id/c3"
         android:onClick="click"
         android:tag="3"/>
     <ImageView
@@ -98,6 +102,7 @@
         android:layout_height="match_parent"
         android:layout_margin="10dp"
         android:layout_weight="1"
+        android:id="@+id/c4"
         android:onClick="click"
         android:tag="4"/>
     <ImageView
@@ -106,6 +111,7 @@
         android:layout_margin="10dp"
         android:layout_weight="1"
         android:onClick="click"
+        android:id="@+id/c5"
         android:tag="5"/>
 </LinearLayout>
 <LinearLayout
@@ -118,6 +124,7 @@
         android:layout_height="match_parent"
         android:layout_margin="10dp"
         android:layout_weight="1"
+        android:id="@+id/c6"
         android:onClick="click"
         android:tag="6"/>
     <ImageView
@@ -126,12 +133,14 @@
         android:layout_margin="10dp"
         android:layout_weight="1"
         android:onClick="click"
+        android:id="@+id/c7"
         android:tag="7"/>
     <ImageView
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_margin="10dp"
         android:layout_weight="1"
+        android:id="@+id/c8"
         android:onClick="click"
         android:tag="8"/>
 </LinearLayout>

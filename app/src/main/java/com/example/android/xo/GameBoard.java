@@ -1,8 +1,10 @@
 package com.example.android.xo;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -25,6 +27,8 @@ public class GameBoard extends AppCompatActivity {
     int x_points = 0;
     int o_points = 0;
 
+    ImageView [] columns;
+
     private Long backPressedTime = 0L;
     TextView current;
     TextView x_point;
@@ -37,11 +41,15 @@ public class GameBoard extends AppCompatActivity {
         setContentView(R.layout.board);
         resources = getResources();
 
-        startGame();
+        columns = new ImageView[]{findViewById(R.id.c0), findViewById(R.id.c1), findViewById(R.id.c2),
+                findViewById(R.id.c3), findViewById(R.id.c4), findViewById(R.id.c5),
+                findViewById(R.id.c6), findViewById(R.id.c7), findViewById(R.id.c8)};
 
         current = findViewById(R.id.current_player);
         x_point = findViewById(R.id.x_point);
         o_point = findViewById(R.id.o_point);
+
+        startGame();
 
         x_point.setText(String.format(resources.getString(R.string.x_point), 0));
         o_point.setText(String.format(resources.getString(R.string.o_point), 0));
@@ -70,11 +78,43 @@ public class GameBoard extends AppCompatActivity {
         }
         if (filled() || winner != No_Winner) {
             plus_point(winner);
-            clearMap();
+            showDialogGame();
         }
     }
 
+    private void showDialogGame() {
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+        builder1.setMessage("Another Game?");
+        builder1.setCancelable(false);
+
+        builder1.setPositiveButton(
+                "Yes",
+                (dialog, id) -> finishGame());
+
+        builder1.setNegativeButton(
+                "No",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        finish();
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alert11 = builder1.create();
+        alert11.show();
+    }
+
     private void clearMap() {
+        for (int j = 0 ; j < 9 ; j++) {
+            status[j] = empty;
+            columns[j].setAlpha(0f);
+        }
+        winner = No_Winner;
+    }
+
+    private void finishGame(){
+        clearMap();
+        startGame();
     }
 
     private void startGame(){
