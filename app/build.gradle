@@ -27,7 +27,7 @@ android {
         variant.outputs.all {
             //outputFileName = "${rootProject.name}_V${versionName}.apk"
             //For adding packageName to generated file use this
-            outputFileName = "${defaultConfig.applicationId}.apk"
+            outputFileName = "${defaultConfig.applicationId}_V${versionName}.apk"
         }
     }
 }

@@ -3,6 +3,7 @@ package com.example.android.xo;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,33 +22,29 @@ public class GameBoard extends AppCompatActivity {
     int active_player;
     int [][] winner_state = {{0,1,2} , {3,4,5} , {6,7,8} , {0,3,6} , {1,4,7} , {2,5,8} , {0,4,8} , {2,4,6}};
 
+    int x_points = 0;
+    int o_points = 0;
+
     private Long backPressedTime = 0L;
     TextView current;
     TextView x_point;
     TextView o_point;
+    Resources resources;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.board);
-//        LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
-//        inflater.inflate(R.layout.board , null);
-//        LayoutInflater.from(getApplicationContext()).inflate(R.layout.board , null , true);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        if (Math.random() < 0.5)
-            active_player = x_player;
-        else
-            active_player = o_player;
-        Toast.makeText(this , "first player is : " + (active_player == x_player ? "X" : "O") , Toast.LENGTH_LONG).show();
+        resources = getResources();
+
+        startGame();
+
         current = findViewById(R.id.current_player);
         x_point = findViewById(R.id.x_point);
         o_point = findViewById(R.id.o_point);
 
-        if (active_player == x_player)
-            current.setText(R.string.current_x);
-        else
-            current.setText(R.string.current_o);
-
+        x_point.setText(String.format(resources.getString(R.string.x_point), 0));
+        o_point.setText(String.format(resources.getString(R.string.o_point), 0));
     }
 
     public void click(View view){
@@ -71,11 +68,29 @@ public class GameBoard extends AppCompatActivity {
         if (winner != No_Winner){
             Toast.makeText(this , "winner : " + ((winner == x_player) ? "x player" : "o player") , Toast.LENGTH_SHORT ).show();
         }
-        if (filled() || winner != No_Winner)
-            finish();
+        if (filled() || winner != No_Winner) {
+            plus_point(winner);
+            clearMap();
+        }
     }
 
-    public int checkWinner(){
+    private void clearMap() {
+    }
+
+    private void startGame(){
+        if (Math.random() < 0.5)
+            active_player = x_player;
+        else
+            active_player = o_player;
+        Toast.makeText(this , "first player is : " + (active_player == x_player ? "X" : "O") , Toast.LENGTH_LONG).show();
+
+        if (active_player == x_player)
+            current.setText(R.string.current_x);
+        else
+            current.setText(R.string.current_o);
+    }
+
+    private int checkWinner(){
         for (int [] post : winner_state){
             if (status[post[0]] == status[post[1]] && status[post[1]] == status[post[2]] && status[post[0]] != empty) {
                 return status[post[0]];
@@ -83,7 +98,7 @@ public class GameBoard extends AppCompatActivity {
         }
         return No_Winner;
     }
-    public boolean filled(){
+    private boolean filled(){
         for (int j : status) {
             if (j == empty)
                 return false;
@@ -108,5 +123,16 @@ public class GameBoard extends AppCompatActivity {
             Toast.makeText(this, "Press back again to leave the app.", Toast.LENGTH_LONG).show();
         }
         backPressedTime = System.currentTimeMillis();
+    }
+
+    private void plus_point(int player){
+        if (player == x_player) {
+            x_points += 1;
+            x_point.setText(String.format(resources.getString(R.string.x_point), x_points));
+        }
+        else if (player == o_player) {
+            o_points += 1;
+            o_point.setText(String.format(resources.getString(R.string.o_point), o_points));
+        }
     }
 }

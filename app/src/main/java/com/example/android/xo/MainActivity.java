@@ -7,10 +7,12 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
     MenuItem menuItem;
+    private Long backPressedTime = 0L;
 
 
     @Override
@@ -31,5 +33,16 @@ public class MainActivity extends AppCompatActivity {
         });
         menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (backPressedTime + 3000 > System.currentTimeMillis()) {
+            super.onBackPressed();
+            finish();
+        } else {
+            Toast.makeText(this, "Press back again to leave the app.", Toast.LENGTH_LONG).show();
+        }
+        backPressedTime = System.currentTimeMillis();
     }
 }
