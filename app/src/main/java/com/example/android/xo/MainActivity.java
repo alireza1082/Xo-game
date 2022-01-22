@@ -19,10 +19,22 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Button button = findViewById(R.id.start);
         button.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this , GameBoard.class);
             startActivity(intent);
+        });
+
+        Button share = findViewById(R.id.share);
+        share.setOnClickListener(v -> {
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_SEND);
+            intent.putExtra(Intent.EXTRA_TEXT,
+                    "https://cafebazaar.ir/app/" + BuildConfig.APPLICATION_ID);
+            intent.setType("text/plain");
+            Intent shareIntent = Intent.createChooser(intent, null);
+            startActivity(shareIntent);
         });
     }
     @Override

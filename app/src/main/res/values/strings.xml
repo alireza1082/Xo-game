@@ -2,6 +2,7 @@
     <string name="app_name">Xo</string>
     <string name="about_us">Xo Game</string>
     <string name="start">start</string>
+    <string name="share">share app</string>
     <string name="current_x">starter player is: X player</string>
     <string name="current_o">starter player is: O player</string>
     <string name="x_point">X = %1$d</string>
