@@ -10,4 +10,13 @@
     <string name="current_player">نوبت = %1$s</string>
     <string name="x_player">X Player</string>
     <string name="o_player">O Player</string>
+    <string name="cell_1">cell 1</string>
+    <string name="cell_2">cell 2</string>
+    <string name="cell_3">cell 3</string>
+    <string name="cell_4">cell 4</string>
+    <string name="cell_5">cell 5</string>
+    <string name="cell_6">cell 6</string>
+    <string name="cell_7">cell 7</string>
+    <string name="cell_8">cell 8</string>
+    <string name="cell_9">cell 9</string>
 </resources>
