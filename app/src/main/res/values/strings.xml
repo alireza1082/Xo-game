@@ -3,8 +3,11 @@
     <string name="about_us">Xo Game</string>
     <string name="start">start</string>
     <string name="share">share app</string>
-    <string name="current_x">starter player is: X player</string>
-    <string name="current_o">starter player is: O player</string>
+    <string name="current_x">Play: X player</string>
+    <string name="current_o">Play: O player</string>
     <string name="x_point">X = %1$d</string>
     <string name="o_point">O = %1$d</string>
+    <string name="current_player">نوبت = %1$s</string>
+    <string name="x_player">X Player</string>
+    <string name="o_player">O Player</string>
 </resources>

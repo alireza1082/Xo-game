@@ -80,6 +80,7 @@ public class GameBoard extends AppCompatActivity {
             plus_point(winner);
             showDialogGame();
         }
+        changeCurrentText();
     }
 
     private void showDialogGame() {
@@ -88,16 +89,14 @@ public class GameBoard extends AppCompatActivity {
         builder1.setCancelable(false);
 
         builder1.setPositiveButton(
-                "Yes",
+                "Continue",
                 (dialog, id) -> finishGame());
 
         builder1.setNegativeButton(
-                "No",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        finish();
-                        dialog.cancel();
-                    }
+                "Exit",
+                (dialog, id) -> {
+                    finish();
+                    dialog.cancel();
                 });
 
         AlertDialog alert11 = builder1.create();
@@ -124,6 +123,10 @@ public class GameBoard extends AppCompatActivity {
             active_player = o_player;
         Toast.makeText(this , "first player is : " + (active_player == x_player ? "X" : "O") , Toast.LENGTH_LONG).show();
 
+        changeCurrentText();
+    }
+
+    private void changeCurrentText(){
         if (active_player == x_player)
             current.setText(R.string.current_x);
         else
