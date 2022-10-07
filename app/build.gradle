@@ -11,7 +11,7 @@ android {
         versionCode 7
         versionName "1.0.6"
 
-        buildConfigField "String", "TAPSELL_KEY", "\"spbachgghnlhftmmmhgplsrfjlgjqocbipsprcelfgqedtianbcoopttkqrngbkjminder\""
+        buildConfigField "String", "TAPSELL_KEY", "\"nbkegqimlrsmisjspoplpbqlafsaodjskgjrlhespgrhjedhpoicegnlhjtimbqkjqiloo\""
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
