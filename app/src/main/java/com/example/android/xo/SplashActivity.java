@@ -19,7 +19,7 @@ import ir.tapsell.plus.model.AdNetworks;
 
 public class SplashActivity extends AppCompatActivity {
 
-    private CompositeDisposable disposable = new CompositeDisposable();
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -12,6 +12,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.xo.Constants.Constants;
+
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Completable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
+import ir.tapsell.plus.AdRequestCallback;
+import ir.tapsell.plus.AdShowListener;
+import ir.tapsell.plus.TapsellPlus;
+import ir.tapsell.plus.TapsellPlusBannerType;
+import ir.tapsell.plus.model.TapsellPlusAdModel;
+import ir.tapsell.plus.model.TapsellPlusErrorModel;
+
 public class GameBoard extends AppCompatActivity {
 
     public static final int x_player = 12;
@@ -34,6 +49,9 @@ public class GameBoard extends AppCompatActivity {
     TextView o_point;
     Resources resources;
 
+    private String standardBannerResponseId = "";
+    private final CompositeDisposable disposable = new CompositeDisposable();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +70,7 @@ public class GameBoard extends AppCompatActivity {
 
         x_point.setText(String.format(resources.getString(R.string.x_point), 0));
         o_point.setText(String.format(resources.getString(R.string.o_point), 0));
+        requestTapsellStandard();
     }
 
     public void click(View view){
@@ -115,6 +134,12 @@ public class GameBoard extends AppCompatActivity {
         startGame();
     }
 
+    @Override
+    protected void onDestroy() {
+        destroyAd();
+        super.onDestroy();
+    }
+
     private void startGame(){
         if (Math.random() < 0.5)
             active_player = x_player;
@@ -176,5 +201,48 @@ public class GameBoard extends AppCompatActivity {
             o_points += 1;
             o_point.setText(String.format(resources.getString(R.string.o_point), o_points));
         }
+    }
+
+    private void requestTapsellStandard(){
+        TapsellPlus.requestStandardBannerAd(
+                this, Constants.STANDARD_ZONE_ID,
+                TapsellPlusBannerType.BANNER_320x50,
+                new AdRequestCallback() {
+                    @Override
+                    public void response(TapsellPlusAdModel tapsellPlusAdModel) {
+                        super.response(tapsellPlusAdModel);
+
+                        standardBannerResponseId = tapsellPlusAdModel.getResponseId();
+                    }
+
+                    @Override
+                    public void error(@NonNull String message) {
+                    }
+                });
+
+        disposable.add(Completable
+                .timer(6, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::showStandardAd));
+    }
+
+    private void showStandardAd(){
+        TapsellPlus.showStandardBannerAd(this, standardBannerResponseId,
+                findViewById(R.id.standard_ad_container),
+                new AdShowListener() {
+                    @Override
+                    public void onOpened(TapsellPlusAdModel tapsellPlusAdModel) {
+                        super.onOpened(tapsellPlusAdModel);
+                    }
+
+                    @Override
+                    public void onError(TapsellPlusErrorModel tapsellPlusErrorModel) {
+                        super.onError(tapsellPlusErrorModel);
+                    }
+                });
+    }
+
+    private void destroyAd() {
+        TapsellPlus.destroyStandardBanner(this, standardBannerResponseId, findViewById(R.id.standard_ad_container));
     }
 }

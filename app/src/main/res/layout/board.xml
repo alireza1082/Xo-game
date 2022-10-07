@@ -43,6 +43,15 @@
         android:textColor="@color/colorPrimary"
         android:textSize="20sp"/>
 
+    <FrameLayout
+        android:id="@+id/standard_ad_container"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:visibility="gone"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
 <LinearLayout
     android:id="@+id/board"
     android:layout_width="match_parent"
