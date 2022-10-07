@@ -1,10 +1,10 @@
 package com.example.android.xo;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.concurrent.TimeUnit;
 
@@ -40,7 +40,7 @@ public class SplashActivity extends AppCompatActivity {
         finish();
     }
 
-    private void initTapsell(){
+    private void initTapsell() {
         TapsellPlus.initialize(this, BuildConfig.TAPSELL_KEY,
                 new TapsellPlusInitListener() {
                     @Override
@@ -51,7 +51,7 @@ public class SplashActivity extends AppCompatActivity {
                     @Override
                     public void onInitializeFailed(AdNetworks adNetworks,
                                                    AdNetworkError adNetworkError) {
-                        Log.e("onInitializeFailed", "ad network: " + adNetworks.name() + ", error: " +	adNetworkError.getErrorMessage());
+                        Log.e("onInitializeFailed", "ad network: " + adNetworks.name() + ", error: " + adNetworkError.getErrorMessage());
                     }
                 });
     }

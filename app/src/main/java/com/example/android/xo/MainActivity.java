@@ -1,13 +1,13 @@
 package com.example.android.xo;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
         Button button = findViewById(R.id.start);
         button.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this , GameBoard.class);
+            Intent intent = new Intent(MainActivity.this, GameBoard.class);
             startActivity(intent);
         });
 
@@ -37,10 +37,11 @@ public class MainActivity extends AppCompatActivity {
             startActivity(shareIntent);
         });
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menuItem = menu.add("about us").setOnMenuItemClickListener(item -> {
-            startActivity(new Intent(MainActivity.this , AboutUs.class));
+            startActivity(new Intent(MainActivity.this, AboutUs.class));
             return false;
         });
         menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
