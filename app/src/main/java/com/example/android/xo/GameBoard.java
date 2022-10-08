@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -213,10 +214,12 @@ public class GameBoard extends AppCompatActivity {
                         super.response(tapsellPlusAdModel);
 
                         standardBannerResponseId = tapsellPlusAdModel.getResponseId();
+                        Log.i("Tapsell", "standard banner request created");
                     }
 
                     @Override
                     public void error(@NonNull String message) {
+                        Log.e("Tapsell", "standard banner request got error");
                     }
                 });
 
@@ -232,11 +235,13 @@ public class GameBoard extends AppCompatActivity {
                 new AdShowListener() {
                     @Override
                     public void onOpened(TapsellPlusAdModel tapsellPlusAdModel) {
+                        Log.i("Tapsell", "standard banner opened");
                         super.onOpened(tapsellPlusAdModel);
                     }
 
                     @Override
                     public void onError(TapsellPlusErrorModel tapsellPlusErrorModel) {
+                        Log.i("Tapsell", "standard banner error on show");
                         super.onError(tapsellPlusErrorModel);
                     }
                 });
