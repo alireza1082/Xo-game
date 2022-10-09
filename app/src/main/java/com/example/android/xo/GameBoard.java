@@ -53,6 +53,7 @@ public class GameBoard extends AppCompatActivity {
     FrameLayout adContainer;
 
     private String standardBannerResponseId = "";
+    private String rewardedResponseId = "";
     private final CompositeDisposable disposable = new CompositeDisposable();
 
     @Override
@@ -98,6 +99,7 @@ public class GameBoard extends AppCompatActivity {
             Toast.makeText(this, "winner : " + ((winner == x_player) ? "x player" : "o player"), Toast.LENGTH_SHORT).show();
         }
         if (filled() || winner != No_Winner) {
+            requestRewardedAd();
             plus_point(winner);
             disposable.add(Completable
                     .timer(1, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
@@ -125,6 +127,12 @@ public class GameBoard extends AppCompatActivity {
 
         AlertDialog alert11 = builder1.create();
         alert11.show();
+        int points = x_points + o_points;
+        if (points == 1 || points % 3 == 0)
+            disposable.add(Completable
+                    .timer(1, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(this::showRewardedAd));
     }
 
     private void clearMap() {
@@ -248,7 +256,7 @@ public class GameBoard extends AppCompatActivity {
 
                     @Override
                     public void onError(TapsellPlusErrorModel tapsellPlusErrorModel) {
-                        Log.i("Tapsell", "standard banner error on show");
+                        Log.e("Tapsell", "standard banner error on show");
                         adContainer.setVisibility(View.GONE);
                         super.onError(tapsellPlusErrorModel);
                     }
@@ -257,5 +265,52 @@ public class GameBoard extends AppCompatActivity {
 
     private void destroyAd() {
         TapsellPlus.destroyStandardBanner(this, standardBannerResponseId, findViewById(R.id.standard_ad_container));
+    }
+
+    private void requestRewardedAd() {
+        TapsellPlus.requestRewardedVideoAd(
+                this,
+                Constants.VIDEO_ZONE_ID,
+                new AdRequestCallback() {
+                    @Override
+                    public void response(TapsellPlusAdModel tapsellPlusAdModel) {
+                        super.response(tapsellPlusAdModel);
+
+                        Log.i("Tapsell", "rewarded video request created");
+                        rewardedResponseId = tapsellPlusAdModel.getResponseId();
+                    }
+
+                    @Override
+                    public void error(String message) {
+                        Log.i("Tapsell", "rewarded video request got error");
+                    }
+                });
+    }
+
+    private void showRewardedAd() {
+        TapsellPlus.showRewardedVideoAd(this, rewardedResponseId,
+                new AdShowListener() {
+                    @Override
+                    public void onOpened(TapsellPlusAdModel tapsellPlusAdModel) {
+                        Log.i("Tapsell", "rewarded video request opened");
+                        super.onOpened(tapsellPlusAdModel);
+                    }
+
+                    @Override
+                    public void onClosed(TapsellPlusAdModel tapsellPlusAdModel) {
+                        super.onClosed(tapsellPlusAdModel);
+                    }
+
+                    @Override
+                    public void onRewarded(TapsellPlusAdModel tapsellPlusAdModel) {
+                        super.onRewarded(tapsellPlusAdModel);
+                    }
+
+                    @Override
+                    public void onError(TapsellPlusErrorModel tapsellPlusErrorModel) {
+                        Log.e("Tapsell", "rewarded video error on show");
+                        super.onError(tapsellPlusErrorModel);
+                    }
+                });
     }
 }
