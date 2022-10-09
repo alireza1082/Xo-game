@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,6 +50,7 @@ public class GameBoard extends AppCompatActivity {
     TextView x_point;
     TextView o_point;
     Resources resources;
+    FrameLayout adContainer;
 
     private String standardBannerResponseId = "";
     private final CompositeDisposable disposable = new CompositeDisposable();
@@ -58,6 +60,7 @@ public class GameBoard extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.board);
         resources = getResources();
+        adContainer = findViewById(R.id.standard_ad_container);
 
         columns = new ImageView[]{findViewById(R.id.c0), findViewById(R.id.c1), findViewById(R.id.c2),
                 findViewById(R.id.c3), findViewById(R.id.c4), findViewById(R.id.c5),
@@ -219,6 +222,7 @@ public class GameBoard extends AppCompatActivity {
 
                     @Override
                     public void error(@NonNull String message) {
+                        adContainer.setVisibility(View.GONE);
                         Log.e("Tapsell", "standard banner request got error");
                     }
                 });
@@ -231,17 +235,19 @@ public class GameBoard extends AppCompatActivity {
 
     private void showStandardAd(){
         TapsellPlus.showStandardBannerAd(this, standardBannerResponseId,
-                findViewById(R.id.standard_ad_container),
+                adContainer,
                 new AdShowListener() {
                     @Override
                     public void onOpened(TapsellPlusAdModel tapsellPlusAdModel) {
                         Log.i("Tapsell", "standard banner opened");
+                        adContainer.setVisibility(View.VISIBLE);
                         super.onOpened(tapsellPlusAdModel);
                     }
 
                     @Override
                     public void onError(TapsellPlusErrorModel tapsellPlusErrorModel) {
                         Log.i("Tapsell", "standard banner error on show");
+                        adContainer.setVisibility(View.GONE);
                         super.onError(tapsellPlusErrorModel);
                     }
                 });
