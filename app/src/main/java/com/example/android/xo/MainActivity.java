@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent();
             intent.setAction(Intent.ACTION_SEND);
             intent.putExtra(Intent.EXTRA_TEXT,
-                    "https://cafebazaar.ir/app/" + BuildConfig.APPLICATION_ID);
+                    "https://myket.ir/app/" + BuildConfig.APPLICATION_ID);
             intent.setType("text/plain");
             Intent shareIntent = Intent.createChooser(intent, null);
             startActivity(shareIntent);
