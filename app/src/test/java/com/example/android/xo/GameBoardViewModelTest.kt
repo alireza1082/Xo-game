@@ -28,4 +28,21 @@ class GameBoardViewModelTest {
         assertEquals(GameMode.VS_AI_IMPOSSIBLE, viewModel.game.gameMode)
         assertFalse(viewModel.game.gameResult.isGameOver)
     }
+
+    @Test
+    fun defaultsToHumanPlayerXAndAiPlayerO() {
+        val viewModel = GameBoardViewModel(GameMode.VS_AI_EASY)
+
+        assertEquals(Player.X, viewModel.humanPlayer)
+        assertEquals(Player.O, viewModel.aiPlayer)
+    }
+
+    @Test
+    fun supportsHumanPlayerOWithAiPlayerX() {
+        val viewModel = GameBoardViewModel(GameMode.VS_AI_MEDIUM, Player.O)
+
+        assertEquals(Player.O, viewModel.humanPlayer)
+        assertEquals(Player.X, viewModel.aiPlayer)
+        assertEquals(Player.X, viewModel.game.activePlayer)
+    }
 }

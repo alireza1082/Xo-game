@@ -42,4 +42,33 @@
     <string name="cell_empty">empty</string>
     <string name="cell_x">X</string>
     <string name="cell_o">O</string>
+
+    <string name="sound_toggle">Toggle Sound</string>
+    <string name="sound_enabled">Sound On</string>
+    <string name="sound_disabled">Sound Off</string>
+
+    <string name="stats_button">Game Statistics</string>
+    <string name="stats_title">Statistics</string>
+    <string name="stats_streaks">Records &amp; Streaks</string>
+    <string name="current_streak">Current Win Streak: %1$d</string>
+    <string name="best_streak">Best Win Streak: %1$d</string>
+    <string name="stats_vs_ai">Versus Computer</string>
+    <string name="stats_mode_easy">Easy Mode</string>
+    <string name="stats_mode_medium">Medium Mode</string>
+    <string name="stats_mode_impossible">Impossible Mode</string>
+    <string name="stats_two_player">2-Player Pass &amp; Play</string>
+    <string name="stats_wins">Wins: %1$d</string>
+    <string name="stats_losses">Losses: %1$d</string>
+    <string name="stats_draws">Draws: %1$d</string>
+    <string name="stats_win_rate">Win Rate: %1$d%%</string>
+    <string name="stats_reset_button">Reset All Statistics</string>
+    <string name="stats_reset_confirm_title">Reset Statistics?</string>
+    <string name="stats_reset_confirm_msg">Are you sure you want to reset all game records and statistics?</string>
+    <string name="stats_reset_success">Statistics have been reset.</string>
+
+    <string name="dialog_ai_title">Game Setup</string>
+    <string name="select_symbol">Choose Your Mark</string>
+    <string name="symbol_x_desc">Play as X (You start)</string>
+    <string name="symbol_o_desc">Play as O (AI starts)</string>
+    <string name="start_game">Start Game</string>
 </resources>

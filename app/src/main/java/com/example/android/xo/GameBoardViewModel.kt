@@ -16,15 +16,23 @@ import com.example.android.xo.engine.TicTacToeGame
  * fresh round after the process is recreated, which is acceptable for this
  * casual offline game.
  */
-class GameBoardViewModel(initialGameMode: GameMode) : ViewModel() {
+class GameBoardViewModel(
+    val initialGameMode: GameMode,
+    val humanPlayer: Player = Player.X
+) : ViewModel() {
+
+    val aiPlayer: Player = humanPlayer.opponent()
 
     val game: TicTacToeGame = TicTacToeGame(initialGameMode).apply {
         startNewRound(Player.X)
     }
 
     companion object {
-        fun factory(initialGameMode: GameMode): ViewModelProvider.Factory = viewModelFactory {
-            initializer { GameBoardViewModel(initialGameMode) }
+        fun factory(
+            initialGameMode: GameMode,
+            humanPlayer: Player = Player.X
+        ): ViewModelProvider.Factory = viewModelFactory {
+            initializer { GameBoardViewModel(initialGameMode, humanPlayer) }
         }
     }
 }

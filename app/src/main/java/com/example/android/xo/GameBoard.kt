@@ -4,18 +4,25 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import com.example.android.xo.audio.HapticManager
+import com.example.android.xo.audio.SoundManager
+import com.example.android.xo.data.GamePreferences
 import com.example.android.xo.engine.CellState
 import com.example.android.xo.engine.GameMode
 import com.example.android.xo.engine.GameResult
 import com.example.android.xo.engine.Player
 import com.example.android.xo.engine.TicTacToeAi
 import com.example.android.xo.engine.TicTacToeGame
+import com.example.android.xo.ui.WinningLineView
 import com.example.android.xo.util.WindowInsetsUtil
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
@@ -24,10 +31,13 @@ class GameBoard : AppCompatActivity() {
 
     private companion object {
         const val AI_MOVE_DELAY_MS = 400L
-        const val GAME_OVER_DIALOG_DELAY_MS = 600L
+        const val GAME_OVER_DIALOG_DELAY_MS = 700L
     }
 
     private lateinit var viewModel: GameBoardViewModel
+    private lateinit var preferences: GamePreferences
+    private lateinit var soundManager: SoundManager
+    private lateinit var hapticManager: HapticManager
 
     /** Game state, owned by the [viewModel] so it survives configuration changes. */
     private val game: TicTacToeGame
@@ -40,6 +50,8 @@ class GameBoard : AppCompatActivity() {
     private lateinit var drawPointText: TextView
     private lateinit var playerXTitle: TextView
     private lateinit var playerOTitle: TextView
+    private lateinit var winningLineView: WinningLineView
+    private lateinit var btnSoundToggle: ImageButton
 
     private val mainHandler = Handler(Looper.getMainLooper())
     private var pendingAiRunnable: Runnable? = null
@@ -53,6 +65,14 @@ class GameBoard : AppCompatActivity() {
         setContentView(R.layout.board)
         WindowInsetsUtil.applySystemBarInsets(findViewById(R.id.root))
 
+        preferences = GamePreferences(this)
+        soundManager = SoundManager(this).apply {
+            isSoundEnabled = preferences.isSoundEnabled
+        }
+        hapticManager = HapticManager(this).apply {
+            isHapticEnabled = preferences.isHapticEnabled
+        }
+
         initViews()
         setupBackNavigation()
 
@@ -61,14 +81,22 @@ class GameBoard : AppCompatActivity() {
             runCatching { GameMode.valueOf(modeName) }.getOrNull()?.let { mode = it }
         }
 
-        viewModel = ViewModelProvider(this, GameBoardViewModel.factory(mode))[GameBoardViewModel::class.java]
+        var humanPlayer = preferences.preferredSymbol
+        intent?.getStringExtra(MainActivity.EXTRA_HUMAN_PLAYER)?.let { pName ->
+            runCatching { Player.valueOf(pName) }.getOrNull()?.let { humanPlayer = it }
+        }
+
+        viewModel = ViewModelProvider(
+            this,
+            GameBoardViewModel.factory(mode, humanPlayer)
+        )[GameBoardViewModel::class.java]
 
         setupToolbar()
         updateLabelsForGameMode()
         updateFullUi()
 
-        // If it was restored during an AI turn, trigger AI move
-        if (game.gameMode.isAiMode && game.activePlayer == Player.O && !game.gameResult.isGameOver) {
+        // If it starts or was restored during an AI turn, trigger AI move
+        if (game.gameMode.isAiMode && game.activePlayer == viewModel.aiPlayer && !game.gameResult.isGameOver) {
             triggerAiMove()
         }
     }
@@ -90,6 +118,7 @@ class GameBoard : AppCompatActivity() {
         drawPointText = findViewById(R.id.draw_point)
         playerXTitle = findViewById(R.id.player_x_title)
         playerOTitle = findViewById(R.id.player_o_title)
+        winningLineView = findViewById(R.id.winning_line_view)
 
         findViewById<MaterialButton>(R.id.btn_play_again).setOnClickListener { startNewGameRound() }
         findViewById<MaterialButton>(R.id.btn_reset_score).setOnClickListener { confirmResetScore() }
@@ -101,6 +130,24 @@ class GameBoard : AppCompatActivity() {
             setNavigationOnClickListener { finish() }
             title = getModeTitle()
         }
+
+        btnSoundToggle = findViewById(R.id.btn_sound_toggle)
+        updateSoundIcon()
+        btnSoundToggle.setOnClickListener {
+            val newState = !soundManager.isSoundEnabled
+            soundManager.isSoundEnabled = newState
+            preferences.isSoundEnabled = newState
+            updateSoundIcon()
+            hapticManager.performTap(it)
+            val msg = if (newState) R.string.sound_enabled else R.string.sound_disabled
+            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun updateSoundIcon() {
+        btnSoundToggle.setImageResource(
+            if (soundManager.isSoundEnabled) R.drawable.ic_sound_on else R.drawable.ic_sound_off
+        )
     }
 
     private fun getModeTitle(): String = when (game.gameMode) {
@@ -123,8 +170,13 @@ class GameBoard : AppCompatActivity() {
 
     private fun updateLabelsForGameMode() {
         if (game.gameMode.isAiMode) {
-            playerXTitle.setText(R.string.score_you)
-            playerOTitle.setText(R.string.score_ai)
+            if (viewModel.humanPlayer == Player.X) {
+                playerXTitle.setText(R.string.score_you)
+                playerOTitle.setText(R.string.score_ai)
+            } else {
+                playerXTitle.setText(R.string.score_ai)
+                playerOTitle.setText(R.string.score_you)
+            }
         } else {
             playerXTitle.setText(R.string.cell_x)
             playerOTitle.setText(R.string.cell_o)
@@ -134,10 +186,14 @@ class GameBoard : AppCompatActivity() {
     private fun onCellClicked(index: Int) {
         if (isInputLocked) return
         if (game.gameResult.isGameOver) return
+        if (game.gameMode.isAiMode && game.activePlayer != viewModel.humanPlayer) return
         if (game.cellAt(index) != CellState.EMPTY) return
 
         val movingPlayer = game.activePlayer
         if (!game.makeMove(index)) return
+
+        soundManager.playMove()
+        hapticManager.performTap(cellViews[index])
 
         animateCellPlacement(index, movingPlayer)
         handlePostMove()
@@ -150,15 +206,47 @@ class GameBoard : AppCompatActivity() {
         val result = game.gameResult
         if (result.isGameOver) {
             isInputLocked = true
-            highlightWinningCellsIfAny()
-            scheduleGameOverDialog()
+            handleGameOver(result)
             return
         }
 
-        // If Single Player mode and now AI's turn (O)
-        if (game.gameMode.isAiMode && game.activePlayer == Player.O) {
+        // If Single Player mode and now AI's turn
+        if (game.gameMode.isAiMode && game.activePlayer == viewModel.aiPlayer) {
             triggerAiMove()
         }
+    }
+
+    private fun handleGameOver(result: GameResult) {
+        // Persist game result in statistics
+        preferences.recordGameResult(game.gameMode, viewModel.humanPlayer, result.winner)
+
+        if (result.winner != null) {
+            highlightWinningCellsIfAny()
+            val lineColor = ContextCompat.getColor(
+                this,
+                if (result.winner == Player.X) R.color.colorX else R.color.colorO
+            )
+            winningLineView.startWinAnimation(result.winningIndices, lineColor)
+
+            if (game.gameMode.isAiMode) {
+                if (result.winner == viewModel.humanPlayer) {
+                    soundManager.playWin()
+                    hapticManager.performWin()
+                } else {
+                    soundManager.playDraw()
+                    hapticManager.performTap()
+                }
+            } else {
+                soundManager.playWin()
+                hapticManager.performWin()
+            }
+        } else {
+            // Draw
+            soundManager.playDraw()
+            hapticManager.performTap()
+        }
+
+        scheduleGameOverDialog()
     }
 
     private fun triggerAiMove() {
@@ -170,10 +258,12 @@ class GameBoard : AppCompatActivity() {
             if (isFinishing || isDestroyed) return@Runnable
             if (game.gameResult.isGameOver) return@Runnable
 
-            val bestMove = TicTacToeAi.getBestMove(game, game.gameMode, Player.O)
+            val bestMove = TicTacToeAi.getBestMove(game, game.gameMode, viewModel.aiPlayer)
             if (bestMove >= 0) {
                 game.makeMove(bestMove)
-                animateCellPlacement(bestMove, Player.O)
+                soundManager.playMove()
+                hapticManager.performTap(cellViews[bestMove])
+                animateCellPlacement(bestMove, viewModel.aiPlayer)
                 isInputLocked = false
                 handlePostMove()
             } else {
@@ -233,9 +323,17 @@ class GameBoard : AppCompatActivity() {
         val result = game.gameResult
         val message = when (result.status) {
             GameResult.Status.X_WON ->
-                if (game.gameMode.isAiMode) getString(R.string.winner_you) else getString(R.string.winner_x)
+                if (game.gameMode.isAiMode) {
+                    if (viewModel.humanPlayer == Player.X) getString(R.string.winner_you) else getString(R.string.winner_ai)
+                } else {
+                    getString(R.string.winner_x)
+                }
             GameResult.Status.O_WON ->
-                if (game.gameMode.isAiMode) getString(R.string.winner_ai) else getString(R.string.winner_o)
+                if (game.gameMode.isAiMode) {
+                    if (viewModel.humanPlayer == Player.O) getString(R.string.winner_you) else getString(R.string.winner_ai)
+                } else {
+                    getString(R.string.winner_o)
+                }
             else -> getString(R.string.game_draw)
         }
 
@@ -254,8 +352,10 @@ class GameBoard : AppCompatActivity() {
         cancelPendingAi()
         cancelPendingDialog()
 
-        // Alternate starting player or start with X
-        val nextStarter = game.gameResult.winner ?: Player.X
+        winningLineView.clear()
+
+        // X always makes the first move in standard Tic Tac Toe
+        val nextStarter = Player.X
 
         game.startNewRound(nextStarter)
         isInputLocked = false
@@ -263,7 +363,7 @@ class GameBoard : AppCompatActivity() {
         resetCellViewsUi()
         updateFullUi()
 
-        if (game.gameMode.isAiMode && game.activePlayer == Player.O) {
+        if (game.gameMode.isAiMode && game.activePlayer == viewModel.aiPlayer) {
             triggerAiMove()
         }
     }
@@ -324,7 +424,6 @@ class GameBoard : AppCompatActivity() {
         }
     }
 
-    // Scores are rendered as plain ASCII digits, matching the original Java implementation.
     @SuppressLint("SetTextI18n")
     private fun updateScores() {
         xPointText.text = game.xScore.toString()
@@ -338,9 +437,17 @@ class GameBoard : AppCompatActivity() {
             currentPlayerText.setText(
                 when (result.status) {
                     GameResult.Status.X_WON ->
-                        if (game.gameMode.isAiMode) R.string.winner_you else R.string.winner_x
+                        if (game.gameMode.isAiMode) {
+                            if (viewModel.humanPlayer == Player.X) R.string.winner_you else R.string.winner_ai
+                        } else {
+                            R.string.winner_x
+                        }
                     GameResult.Status.O_WON ->
-                        if (game.gameMode.isAiMode) R.string.winner_ai else R.string.winner_o
+                        if (game.gameMode.isAiMode) {
+                            if (viewModel.humanPlayer == Player.O) R.string.winner_you else R.string.winner_ai
+                        } else {
+                            R.string.winner_o
+                        }
                     else -> R.string.game_draw
                 }
             )
@@ -349,7 +456,7 @@ class GameBoard : AppCompatActivity() {
 
         currentPlayerText.setText(
             if (game.gameMode.isAiMode) {
-                if (game.activePlayer == Player.O) R.string.turn_ai else R.string.turn_you
+                if (game.activePlayer == viewModel.aiPlayer) R.string.turn_ai else R.string.turn_you
             } else {
                 if (game.activePlayer == Player.X) R.string.turn_x else R.string.turn_o
             }
@@ -375,6 +482,8 @@ class GameBoard : AppCompatActivity() {
         cancelPendingAi()
         cancelPendingDialog()
         dismissActiveDialog()
+        winningLineView.clear()
+        soundManager.release()
         super.onDestroy()
     }
 }
