@@ -18,9 +18,9 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@color/colorBlue"
             app:title="@string/stats_title"
-            app:titleTextColor="@android:color/white"
+            app:titleTextColor="@color/colorTextOnPrimary"
             app:navigationIcon="@drawable/ic_arrow_back"
-            app:navigationIconTint="@android:color/white" />
+            app:navigationIconTint="@color/colorTextOnPrimary" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -41,7 +41,7 @@
                 android:layout_marginBottom="12dp"
                 app:cardCornerRadius="14dp"
                 app:cardElevation="2dp"
-                app:cardBackgroundColor="@android:color/white">
+                app:cardBackgroundColor="@color/surface">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -53,7 +53,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/stats_streaks"
-                        android:textColor="@color/colorBlue"
+                        android:textColor="@color/colorAccent"
                         android:textSize="17sp"
                         android:textStyle="bold" />
 
@@ -93,7 +93,7 @@
                         <View
                             android:layout_width="1dp"
                             android:layout_height="match_parent"
-                            android:background="#E2E8F0" />
+                            android:background="@color/divider" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -132,7 +132,7 @@
                 android:layout_marginBottom="12dp"
                 app:cardCornerRadius="14dp"
                 app:cardElevation="2dp"
-                app:cardBackgroundColor="@android:color/white">
+                app:cardBackgroundColor="@color/surface">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -144,7 +144,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/stats_vs_ai"
-                        android:textColor="@color/colorBlue"
+                        android:textColor="@color/colorAccent"
                         android:textSize="17sp"
                         android:textStyle="bold" />
 
@@ -171,7 +171,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginVertical="10dp"
-                        android:background="#E2E8F0" />
+                        android:background="@color/divider" />
 
                     <!-- Medium Mode -->
                     <TextView
@@ -195,7 +195,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginVertical="10dp"
-                        android:background="#E2E8F0" />
+                        android:background="@color/divider" />
 
                     <!-- Impossible Mode -->
                     <TextView
@@ -225,7 +225,7 @@
                 android:layout_marginBottom="16dp"
                 app:cardCornerRadius="14dp"
                 app:cardElevation="2dp"
-                app:cardBackgroundColor="@android:color/white">
+                app:cardBackgroundColor="@color/surface">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -237,7 +237,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/stats_two_player"
-                        android:textColor="@color/colorBlue"
+                        android:textColor="@color/colorAccent"
                         android:textSize="17sp"
                         android:textStyle="bold" />
 

@@ -1,21 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#1C2D6C</color>
-    <color name="colorPrimaryDark">#13204D</color>
-    <color name="colorAccent">#2BC1D5</color>
-    <color name="colorBlue">#1C2D6C</color>
-    <color name="colorLightBlue">#2BC1D5</color>
+    <color name="colorPrimary">#18243D</color>
+    <color name="colorPrimaryDark">#10182B</color>
+    <color name="colorAccent">#F2B84B</color>
+    <color name="colorBlue">#18243D</color>
+    <color name="colorLightBlue">#55C2B3</color>
 
-    <color name="splash_back">#1C2D6C</color>
-    <color name="main_back">#F0F4F8</color>
+    <color name="splash_back">#18243D</color>
+    <color name="main_back">#F5F7FB</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="surfaceElevated">#FFFFFF</color>
+    <color name="boardSurface">#18243D</color>
+    <color name="boardCell">#263653</color>
+    <color name="boardGrid">#344563</color>
 
-    <color name="colorTextPrimary">#1A202C</color>
-    <color name="colorTextSecondary">#64748B</color>
+    <color name="colorTextPrimary">#172033</color>
+    <color name="colorTextSecondary">#71809A</color>
+    <color name="colorTextOnPrimary">#FFFFFF</color>
+    <color name="colorDisabled">#AAB3C2</color>
 
-    <color name="colorX">#E53935</color>
-    <color name="colorO">#1E88E5</color>
-    <color name="colorWinCell">#C8E6C9</color>
-    <color name="colorDraw">#FFA000</color>
-
-    <color name="cell_pressed">#E2E8F0</color>
+    <color name="colorX">#F26B5E</color>
+    <color name="colorO">#55C2B3</color>
+    <color name="colorWinCell">#FFF1D6</color>
+    <color name="colorWinStroke">#F2B84B</color>
+    <color name="colorDraw">#F2B84B</color>
+    <color name="cell_pressed">#3B4E70</color>
+    <color name="divider">#E4E9F1</color>
 </resources>

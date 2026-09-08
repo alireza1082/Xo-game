@@ -4,376 +4,284 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/main_back"
     tools:context=".GameBoard">
 
-    <!-- Top App Bar -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorBlue"
+        android:background="@color/colorPrimary"
+        android:elevation="0dp"
         app:title="@string/app_name"
-        app:titleTextColor="@android:color/white"
-        app:navigationIconTint="@android:color/white"
+        app:titleTextColor="@color/colorTextOnPrimary"
+        app:navigationIconTint="@color/colorTextOnPrimary"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <ImageButton
             android:id="@+id/btn_sound_toggle"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="end"
-            android:layout_marginEnd="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/sound_toggle"
+            android:padding="12dp"
             android:src="@drawable/ic_sound_on"
-            app:tint="@android:color/white"
-            android:contentDescription="@string/sound_toggle" />
+            app:tint="@color/colorTextOnPrimary" />
     </com.google.android.material.appbar.MaterialToolbar>
 
-    <!-- Scoreboard Row -->
     <LinearLayout
-        android:id="@+id/scoreboard_container"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingHorizontal="16dp"
-        android:paddingTop="12dp"
-        android:weightSum="3"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
-
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginEnd="4dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="2dp"
-            app:cardBackgroundColor="@android:color/white">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="8dp">
-
-                <TextView
-                    android:id="@+id/player_x_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/cell_x"
-                    android:textColor="@color/colorX"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/x_point"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:textColor="@color/colorTextPrimary"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    tools:text="0" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginHorizontal="4dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="2dp"
-            app:cardBackgroundColor="@android:color/white">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="8dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/score_draws"
-                    android:textColor="@color/colorDraw"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/draw_point"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:textColor="@color/colorTextPrimary"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    tools:text="0" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="4dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="2dp"
-            app:cardBackgroundColor="@android:color/white">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="8dp">
-
-                <TextView
-                    android:id="@+id/player_o_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/cell_o"
-                    android:textColor="@color/colorO"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/o_point"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:textColor="@color/colorTextPrimary"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    tools:text="0" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-    </LinearLayout>
-
-    <!-- Turn Indicator -->
-    <TextView
-        android:id="@+id/current_player"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/colorBlue"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_marginTop="12dp"
-        app:layout_constraintTop_toBottomOf="@id/scoreboard_container"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:text="Player X's Turn" />
-
-    <!-- 3x3 Game Board Container: Guaranteed Square, Centered, Constrained to bounds -->
-    <FrameLayout
-        android:id="@+id/board_card"
+        android:id="@+id/game_content"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="20dp"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constrainedWidth="true"
-        app:layout_constrainedHeight="true"
-        app:layout_constraintTop_toBottomOf="@id/current_player"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/space_md"
+        android:paddingTop="@dimen/space_md"
+        android:paddingBottom="@dimen/space_sm"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintBottom_toTopOf="@id/bottom_actions"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Board Background Grid Image -->
-        <ImageView
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/turn_card"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/board"
-            android:scaleType="fitXY"
-            android:importantForAccessibility="no" />
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/surface"
+            app:cardCornerRadius="@dimen/radius_md"
+            app:cardElevation="0dp"
+            app:strokeColor="@color/divider"
+            app:strokeWidth="1dp">
 
-        <!-- 3x3 Grid of Interactive Cells -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="@dimen/space_md"
+                android:paddingVertical="12dp">
+
+                <View
+                    android:id="@+id/turn_dot"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:background="@drawable/turn_dot" />
+
+                <TextView
+                    android:id="@+id/current_player"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:textColor="@color/colorTextPrimary"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    tools:text="Your move" />
+
+                <TextView
+                    android:id="@+id/match_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_tagline"
+                    android:textColor="@color/colorTextSecondary"
+                    android:textSize="11sp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
         <LinearLayout
-            android:id="@+id/board"
+            android:id="@+id/scoreboard_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:weightSum="3">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_md"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-            <!-- Row 0 -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal"
-                android:weightSum="3"
-                tools:ignore="NestedWeights">
+                android:layout_marginEnd="@dimen/space_sm"
+                app:cardBackgroundColor="@color/surface"
+                app:cardCornerRadius="@dimen/radius_sm"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/colorX"
+                app:strokeWidth="2dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingVertical="10dp">
+                    <TextView
+                        android:id="@+id/player_x_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cell_x"
+                        android:textColor="@color/colorX"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/x_point"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:textColor="@color/colorTextPrimary"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        tools:text="0" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-                <ImageView
-                    android:id="@+id/c0"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:layout_margin="6dp"
-                    android:padding="12dp"
-                    android:background="@drawable/cell_background"
-                    android:contentDescription="@string/cell_description"
-                    android:tag="0" />
-
-                <ImageView
-                    android:id="@+id/c1"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:layout_margin="6dp"
-                    android:padding="12dp"
-                    android:background="@drawable/cell_background"
-                    android:contentDescription="@string/cell_description"
-                    android:tag="1" />
-
-                <ImageView
-                    android:id="@+id/c2"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:layout_margin="6dp"
-                    android:padding="12dp"
-                    android:background="@drawable/cell_background"
-                    android:contentDescription="@string/cell_description"
-                    android:tag="2" />
-            </LinearLayout>
-
-            <!-- Row 1 -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal"
-                android:weightSum="3"
-                tools:ignore="NestedWeights">
+                app:cardBackgroundColor="@color/surface"
+                app:cardCornerRadius="@dimen/radius_sm"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/colorDraw"
+                app:strokeWidth="1dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingVertical="10dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/score_draws"
+                        android:textColor="@color/colorDraw"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/draw_point"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:textColor="@color/colorTextPrimary"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        tools:text="0" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-                <ImageView
-                    android:id="@+id/c3"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:layout_margin="6dp"
-                    android:padding="12dp"
-                    android:background="@drawable/cell_background"
-                    android:contentDescription="@string/cell_description"
-                    android:tag="3" />
-
-                <ImageView
-                    android:id="@+id/c4"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:layout_margin="6dp"
-                    android:padding="12dp"
-                    android:background="@drawable/cell_background"
-                    android:contentDescription="@string/cell_description"
-                    android:tag="4" />
-
-                <ImageView
-                    android:id="@+id/c5"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:layout_margin="6dp"
-                    android:padding="12dp"
-                    android:background="@drawable/cell_background"
-                    android:contentDescription="@string/cell_description"
-                    android:tag="5" />
-            </LinearLayout>
-
-            <!-- Row 2 -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal"
-                android:weightSum="3"
-                tools:ignore="NestedWeights">
-
-                <ImageView
-                    android:id="@+id/c6"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:layout_margin="6dp"
-                    android:padding="12dp"
-                    android:background="@drawable/cell_background"
-                    android:contentDescription="@string/cell_description"
-                    android:tag="6" />
-
-                <ImageView
-                    android:id="@+id/c7"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:layout_margin="6dp"
-                    android:padding="12dp"
-                    android:background="@drawable/cell_background"
-                    android:contentDescription="@string/cell_description"
-                    android:tag="7" />
-
-                <ImageView
-                    android:id="@+id/c8"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:layout_margin="6dp"
-                    android:padding="12dp"
-                    android:background="@drawable/cell_background"
-                    android:contentDescription="@string/cell_description"
-                    android:tag="8" />
-            </LinearLayout>
+                android:layout_marginStart="@dimen/space_sm"
+                app:cardBackgroundColor="@color/surface"
+                app:cardCornerRadius="@dimen/radius_sm"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/colorO"
+                app:strokeWidth="2dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingVertical="10dp">
+                    <TextView
+                        android:id="@+id/player_o_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cell_o"
+                        android:textColor="@color/colorO"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/o_point"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:textColor="@color/colorTextPrimary"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        tools:text="0" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
-        <!-- Animated Strike-through Winning Line Overlay -->
-        <com.example.android.xo.ui.WinningLineView
-            android:id="@+id/winning_line_view"
+        <com.example.android.xo.ui.SquareFrameLayout
+            android:id="@+id/board_card"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </FrameLayout>
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/space_md"
+            android:layout_marginBottom="@dimen/space_sm"
+            android:layout_weight="1"
+            android:background="@drawable/board"
+            android:padding="@dimen/space_sm"
+            android:contentDescription="@string/app_name">
 
-    <!-- Bottom Actions -->
+            <LinearLayout
+                android:id="@+id/board"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:weightSum="3">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:orientation="horizontal">
+                    <ImageView android:id="@+id/c0" style="@style/BoardCell" android:tag="0" />
+                    <ImageView android:id="@+id/c1" style="@style/BoardCell" android:tag="1" />
+                    <ImageView android:id="@+id/c2" style="@style/BoardCell" android:tag="2" />
+                </LinearLayout>
+                <LinearLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:orientation="horizontal">
+                    <ImageView android:id="@+id/c3" style="@style/BoardCell" android:tag="3" />
+                    <ImageView android:id="@+id/c4" style="@style/BoardCell" android:tag="4" />
+                    <ImageView android:id="@+id/c5" style="@style/BoardCell" android:tag="5" />
+                </LinearLayout>
+                <LinearLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:orientation="horizontal">
+                    <ImageView android:id="@+id/c6" style="@style/BoardCell" android:tag="6" />
+                    <ImageView android:id="@+id/c7" style="@style/BoardCell" android:tag="7" />
+                    <ImageView android:id="@+id/c8" style="@style/BoardCell" android:tag="8" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <com.example.android.xo.ui.WinningLineView
+                android:id="@+id/winning_line_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:importantForAccessibility="no" />
+        </com.example.android.xo.ui.SquareFrameLayout>
+    </LinearLayout>
+
     <LinearLayout
         android:id="@+id/bottom_actions"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingHorizontal="24dp"
-        android:paddingBottom="16dp"
+        android:paddingHorizontal="@dimen/space_md"
+        android:paddingTop="@dimen/space_sm"
+        android:paddingBottom="@dimen/space_md"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_play_again"
             android:layout_width="0dp"
-            android:layout_height="52dp"
+            android:layout_height="@dimen/button_height"
             android:layout_weight="1"
-            android:layout_marginEnd="8dp"
             android:text="@string/play_again"
-            android:textSize="15sp"
-            app:cornerRadius="12dp"
-            app:backgroundTint="@color/colorBlue" />
+            android:textSize="14sp"
+            app:backgroundTint="@color/colorPrimary"
+            app:cornerRadius="@dimen/radius_sm" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_reset_score"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="0dp"
-            android:layout_height="52dp"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginStart="@dimen/space_sm"
             android:layout_weight="1"
-            android:layout_marginStart="8dp"
             android:text="@string/reset_scores"
-            android:textColor="@color/colorBlue"
-            android:textSize="15sp"
-            app:strokeColor="@color/colorBlue"
-            app:strokeWidth="1.5dp"
-            app:cornerRadius="12dp" />
-
+            android:textColor="@color/colorPrimary"
+            android:textSize="14sp"
+            app:cornerRadius="@dimen/radius_sm"
+            app:strokeColor="@color/colorPrimary"
+            app:strokeWidth="1dp" />
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

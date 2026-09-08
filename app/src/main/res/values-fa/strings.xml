@@ -1,77 +1,73 @@
 <resources>
-    <string name="app_name">دوز - XO</string>
+    <string name="app_name">دوز</string>
+    <string name="app_tagline">یک بازی کلاسیک، با طراحی زیبا</string>
     <string name="share">اشتراک‌گذاری بازی</string>
-    <string name="share_text">بازی دوز (XO) را تجربه کنید: %1$s</string>
-    <string name="mode_single_player">بازی با هوش مصنوعی</string>
-    <string name="mode_two_player">بازی دونفره (همزمان)</string>
+    <string name="share_text">بازی دوز را با من تجربه کنید: %1$s</string>
+    <string name="mode_single_player">بازی با رایانه</string>
+    <string name="mode_two_player">بازی با دوست</string>
     <string name="select_difficulty">انتخاب سطح سختی</string>
     <string name="difficulty_easy">آسان</string>
     <string name="difficulty_medium">متوسط</string>
-    <string name="difficulty_impossible">ناممکن (شکست‌ناپذیر)</string>
-
-    <string name="about_button">راهنما و درباره بازی</string>
+    <string name="difficulty_impossible">ناممکن</string>
+    <string name="about_button">راهنمای بازی</string>
     <string name="about_title">درباره دوز</string>
     <string name="app_version">نسخه %1$s</string>
     <string name="how_to_play_title">راهنمای بازی</string>
-    <string name="how_to_play_description">بازیکنان به نوبت علامت خود را در خانه‌های خالی قرار می‌دهند.\n\nاولین بازیکنی که بتواند ۳ علامت خود را در یک ردیف افقی، عمودی یا مورب قرار دهد، برنده بازی است!\n\nاگر همه ۹ خانه پر شوند و هیچ بازیکنی ۳ ردیف نساخته باشد، بازی مساوی می‌شود.</string>
+    <string name="how_to_play_description">به نوبت علامت خود را در یک خانه خالی قرار دهید. اولین بازیکنی که سه علامت را افقی، عمودی یا مورب کنار هم قرار دهد، برنده است. اگر صفحه بدون برنده پر شود، بازی مساوی می‌شود.</string>
     <string name="features_title">امکانات</string>
-    <string name="features_description">• بازی تک‌نفره با ۳ سطح هوش مصنوعی\n• بازی دونفره روی یک دستگاه\n• انیمیشن‌های روان و کنترل لمسی سریع\n• کاملاً آفلاین و بدون نیاز به اینترنت</string>
-
-    <string name="turn_x">نوبت: بازیکن X</string>
-    <string name="turn_o">نوبت: بازیکن O</string>
-    <string name="turn_you">نوبت شما (X)</string>
-    <string name="turn_ai">در حال فکر کردن…</string>
-
-    <string name="score_you">شما: %1$d</string>
-    <string name="score_ai">رایانه: %1$d</string>
-    <string name="score_draws">مساوی: %1$d</string>
-
-    <string name="winner_x">بازیکن X برنده شد! 🎉</string>
-    <string name="winner_o">بازیکن O برنده شد! 🎉</string>
-    <string name="winner_you">شما برنده شدید! 🎉</string>
-    <string name="winner_ai">رایانه برنده شد! 🤖</string>
-    <string name="game_draw">بازی مساوی شد! 🤝</string>
-
-    <string name="play_again">بازی مجدد</string>
+    <string name="features_description">• سه سطح سختی رایانه\n• بازی دونفره روی یک دستگاه\n• بازخورد سریع و انیمیشن‌های ظریف\n• کاملاً آفلاین و خصوصی</string>
+    <string name="turn_x">نوبت X</string>
+    <string name="turn_o">نوبت O</string>
+    <string name="turn_you">نوبت شما</string>
+    <string name="turn_ai">رایانه در حال فکر کردن است…</string>
+    <string name="score_you">شما</string>
+    <string name="score_ai">رایانه</string>
+    <string name="score_draws">مساوی</string>
+    <string name="winner_x">X برنده شد</string>
+    <string name="winner_o">O برنده شد</string>
+    <string name="winner_you">شما برنده شدید</string>
+    <string name="winner_ai">رایانه برنده شد</string>
+    <string name="game_draw">بازی مساوی شد</string>
+    <string name="result_win_message">حرکت خوبی بود.</string>
+    <string name="result_loss_message">بازی خوبی بود. دوباره تلاش کنید.</string>
+    <string name="result_draw_message">بازی نزدیکی بود. هیچ‌کس کوتاه نیامد.</string>
+    <string name="play_again">دور جدید</string>
     <string name="reset_scores">صفر کردن امتیازها</string>
     <string name="reset_scores_title">صفر کردن امتیازها؟</string>
-    <string name="reset_scores_message">آیا از بازنشانی امتیازات راندهای فعلی به صفر اطمینان دارید؟</string>
+    <string name="reset_scores_message">امتیازهای مسابقه فعلی پاک می‌شوند.</string>
     <string name="action_reset">صفر کردن</string>
     <string name="exit_to_menu">منوی اصلی</string>
-    <string name="dialog_game_over_title">پایان بازی</string>
+    <string name="dialog_game_over_title">پایان دور</string>
     <string name="press_back_again">برای خروج دوباره دکمه بازگشت را بزنید.</string>
-
     <string name="cell_description">خانه %1$d، %2$s</string>
+    <string name="cell_accessibility_hint">خانه بازی</string>
     <string name="cell_empty">خالی</string>
     <string name="cell_x">X</string>
     <string name="cell_o">O</string>
-
     <string name="sound_toggle">قطع/وصل صدا</string>
     <string name="sound_enabled">صدا روشن</string>
     <string name="sound_disabled">صدا خاموش</string>
-
-    <string name="stats_button">آمار و رکوردها</string>
-    <string name="stats_title">آمار و رکوردها</string>
-    <string name="stats_streaks">رکوردها و برد متوالی</string>
-    <string name="current_streak">برد متوالی فعلی: %1$d</string>
-    <string name="best_streak">بهترین برد متوالی: %1$d</string>
-    <string name="stats_vs_ai">بازی با هوش مصنوعی</string>
-    <string name="stats_mode_easy">سطح آسان</string>
-    <string name="stats_mode_medium">سطح متوسط</string>
-    <string name="stats_mode_impossible">سطح ناممکن</string>
+    <string name="stats_button">آمار</string>
+    <string name="stats_title">آمار</string>
+    <string name="stats_streaks">بردهای متوالی</string>
+    <string name="current_streak">برد متوالی فعلی</string>
+    <string name="best_streak">بهترین برد متوالی</string>
+    <string name="stats_vs_ai">بازی با رایانه</string>
+    <string name="stats_mode_easy">آسان</string>
+    <string name="stats_mode_medium">متوسط</string>
+    <string name="stats_mode_impossible">ناممکن</string>
     <string name="stats_two_player">بازی دونفره</string>
     <string name="stats_wins">برد: %1$d</string>
     <string name="stats_losses">باخت: %1$d</string>
     <string name="stats_draws">مساوی: %1$d</string>
     <string name="stats_win_rate">درصد برد: %1$d٪</string>
-    <string name="stats_reset_button">صفر کردن تمامی آمارها</string>
+    <string name="stats_reset_button">صفر کردن همه آمار</string>
     <string name="stats_reset_confirm_title">صفر کردن آمار؟</string>
-    <string name="stats_reset_confirm_msg">آیا مطمئن هستید که می‌خواهید تمام سوابق و آمارهای بازی را پاک کنید؟</string>
-    <string name="stats_reset_success">آمار بازی با موفقیت بازنشانی شد.</string>
-
-    <string name="dialog_ai_title">تنظیمات بازی با هوش مصنوعی</string>
-    <string name="select_symbol">انتخاب نماد شما</string>
-    <string name="symbol_x_desc">بازی با X (شروع‌کننده شما هستید)</string>
-    <string name="symbol_o_desc">بازی با O (شروع‌کننده هوش مصنوعی است)</string>
-    <string name="start_game">شروع بازی</string>
+    <string name="stats_reset_confirm_msg">تمام سوابق و آمار بازی پاک می‌شوند.</string>
+    <string name="stats_reset_success">آمار صفر شد.</string>
+    <string name="dialog_ai_title">تنظیم مسابقه</string>
+    <string name="select_symbol">انتخاب علامت شما</string>
+    <string name="symbol_x_desc">بازی با X · شروع با شما</string>
+    <string name="symbol_o_desc">بازی با O · شروع رایانه</string>
+    <string name="start_game">شروع مسابقه</string>
 </resources>

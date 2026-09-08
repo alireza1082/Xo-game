@@ -3,7 +3,11 @@ package com.example.android.xo
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Looper
+import android.view.View
+import android.view.WindowManager
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -26,12 +30,14 @@ import com.example.android.xo.ui.WinningLineView
 import com.example.android.xo.util.WindowInsetsUtil
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.card.MaterialCardView
 
 class GameBoard : AppCompatActivity() {
 
     private companion object {
         const val AI_MOVE_DELAY_MS = 400L
         const val GAME_OVER_DIALOG_DELAY_MS = 700L
+        const val GAME_OVER_RESULT_VISIBLE_MS = 2000L
     }
 
     private lateinit var viewModel: GameBoardViewModel
@@ -45,6 +51,8 @@ class GameBoard : AppCompatActivity() {
 
     private lateinit var cellViews: Array<ImageView>
     private lateinit var currentPlayerText: TextView
+    private lateinit var turnCard: MaterialCardView
+    private lateinit var turnDot: View
     private lateinit var xPointText: TextView
     private lateinit var oPointText: TextView
     private lateinit var drawPointText: TextView
@@ -56,6 +64,7 @@ class GameBoard : AppCompatActivity() {
     private val mainHandler = Handler(Looper.getMainLooper())
     private var pendingAiRunnable: Runnable? = null
     private var pendingDialogRunnable: Runnable? = null
+    private var pendingResultDismissRunnable: Runnable? = null
     private var activeDialog: AlertDialog? = null
 
     private var isInputLocked = false
@@ -113,6 +122,8 @@ class GameBoard : AppCompatActivity() {
         }
 
         currentPlayerText = findViewById(R.id.current_player)
+        turnCard = findViewById(R.id.turn_card)
+        turnDot = findViewById(R.id.turn_dot)
         xPointText = findViewById(R.id.x_point)
         oPointText = findViewById(R.id.o_point)
         drawPointText = findViewById(R.id.draw_point)
@@ -321,30 +332,65 @@ class GameBoard : AppCompatActivity() {
         dismissActiveDialog()
 
         val result = game.gameResult
-        val message = when (result.status) {
-            GameResult.Status.X_WON ->
-                if (game.gameMode.isAiMode) {
-                    if (viewModel.humanPlayer == Player.X) getString(R.string.winner_you) else getString(R.string.winner_ai)
-                } else {
-                    getString(R.string.winner_x)
-                }
-            GameResult.Status.O_WON ->
-                if (game.gameMode.isAiMode) {
-                    if (viewModel.humanPlayer == Player.O) getString(R.string.winner_you) else getString(R.string.winner_ai)
-                } else {
-                    getString(R.string.winner_o)
-                }
-            else -> getString(R.string.game_draw)
+        val resultTitleRes: Int
+        val resultMessageRes: Int
+        val badge: String
+        when (result.status) {
+            GameResult.Status.X_WON -> {
+                resultTitleRes = if (game.gameMode.isAiMode) {
+                    if (viewModel.humanPlayer == Player.X) R.string.winner_you else R.string.winner_ai
+                } else R.string.winner_x
+                resultMessageRes = if (game.gameMode.isAiMode && viewModel.humanPlayer != Player.X) {
+                    R.string.result_loss_message
+                } else R.string.result_win_message
+                badge = "X"
+            }
+            GameResult.Status.O_WON -> {
+                resultTitleRes = if (game.gameMode.isAiMode) {
+                    if (viewModel.humanPlayer == Player.O) R.string.winner_you else R.string.winner_ai
+                } else R.string.winner_o
+                resultMessageRes = if (game.gameMode.isAiMode && viewModel.humanPlayer != Player.O) {
+                    R.string.result_loss_message
+                } else R.string.result_win_message
+                badge = "O"
+            }
+            else -> {
+                resultTitleRes = R.string.game_draw
+                resultMessageRes = R.string.result_draw_message
+                badge = "="
+            }
         }
 
+        val dialogView = layoutInflater.inflate(R.layout.dialog_game_result, null)
+        dialogView.findViewById<TextView>(R.id.result_badge).text = badge
+        dialogView.findViewById<TextView>(R.id.result_title).setText(resultTitleRes)
+        dialogView.findViewById<TextView>(R.id.result_message).setText(resultMessageRes)
+
         activeDialog = AlertDialog.Builder(this)
-            .setTitle(R.string.dialog_game_over_title)
-            .setMessage(message)
+            .setView(dialogView)
             .setCancelable(false)
-            .setPositiveButton(R.string.play_again) { _, _ -> startNewGameRound() }
-            .setNegativeButton(R.string.exit_to_menu) { _, _ -> finish() }
             .create()
-            .apply { show() }
+            .apply {
+                show()
+                window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                window?.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+                window?.attributes?.let { attributes ->
+                    attributes.dimAmount = 0.55f
+                    window?.attributes = attributes
+                }
+                dialogView.alpha = 0f
+                dialogView.scaleX = 0.92f
+                dialogView.scaleY = 0.92f
+                dialogView.animate().alpha(1f).scaleX(1f).scaleY(1f).setDuration(220L).start()
+            }
+
+        val dismissRunnable = Runnable {
+            if (isFinishing || isDestroyed) return@Runnable
+            dismissActiveDialog()
+            startNewGameRound()
+        }
+        pendingResultDismissRunnable = dismissRunnable
+        mainHandler.postDelayed(dismissRunnable, GAME_OVER_RESULT_VISIBLE_MS)
     }
 
     private fun startNewGameRound() {
@@ -443,6 +489,8 @@ class GameBoard : AppCompatActivity() {
     private fun updateTurnIndicator() {
         val result = game.gameResult
         if (result.isGameOver) {
+            turnCard.strokeColor = ContextCompat.getColor(this, R.color.colorDraw)
+            turnDot.backgroundTintList = ContextCompat.getColorStateList(this, R.color.colorDraw)
             currentPlayerText.setText(
                 when (result.status) {
                     GameResult.Status.X_WON ->
@@ -463,6 +511,9 @@ class GameBoard : AppCompatActivity() {
             return
         }
 
+        val activeColor = if (game.activePlayer == Player.X) R.color.colorX else R.color.colorO
+        turnCard.strokeColor = ContextCompat.getColor(this, activeColor)
+        turnDot.backgroundTintList = ContextCompat.getColorStateList(this, activeColor)
         currentPlayerText.setText(
             if (game.gameMode.isAiMode) {
                 if (game.activePlayer == viewModel.aiPlayer) R.string.turn_ai else R.string.turn_you
@@ -480,6 +531,8 @@ class GameBoard : AppCompatActivity() {
     private fun cancelPendingDialog() {
         pendingDialogRunnable?.let { mainHandler.removeCallbacks(it) }
         pendingDialogRunnable = null
+        pendingResultDismissRunnable?.let { mainHandler.removeCallbacks(it) }
+        pendingResultDismissRunnable = null
     }
 
     private fun dismissActiveDialog() {
