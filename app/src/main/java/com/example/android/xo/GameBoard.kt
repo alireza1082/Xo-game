@@ -382,9 +382,9 @@ class GameBoard : AppCompatActivity() {
 
     private fun confirmResetScore() {
         AlertDialog.Builder(this)
-            .setTitle(R.string.reset_scores)
-            .setMessage(R.string.reset_scores)
-            .setPositiveButton(R.string.play_again) { _, _ ->
+            .setTitle(R.string.reset_scores_title)
+            .setMessage(R.string.reset_scores_message)
+            .setPositiveButton(R.string.action_reset) { _, _ ->
                 game.resetAll(Player.X)
                 startNewGameRound()
             }
@@ -421,6 +421,15 @@ class GameBoard : AppCompatActivity() {
 
         if (game.gameResult.isGameOver) {
             highlightWinningCellsIfAny()
+            val winner = game.gameResult.winner
+            val winIndices = game.gameResult.winningIndices
+            if (winner != null && winIndices != null) {
+                val lineColor = ContextCompat.getColor(
+                    this,
+                    if (winner == Player.X) R.color.colorX else R.color.colorO
+                )
+                winningLineView.showWinningLine(winIndices, lineColor)
+            }
         }
     }
 

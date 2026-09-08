@@ -34,6 +34,9 @@
 
     <string name="play_again">بازی مجدد</string>
     <string name="reset_scores">صفر کردن امتیازها</string>
+    <string name="reset_scores_title">صفر کردن امتیازها؟</string>
+    <string name="reset_scores_message">آیا از بازنشانی امتیازات راندهای فعلی به صفر اطمینان دارید؟</string>
+    <string name="action_reset">صفر کردن</string>
     <string name="exit_to_menu">منوی اصلی</string>
     <string name="dialog_game_over_title">پایان بازی</string>
     <string name="press_back_again">برای خروج دوباره دکمه بازگشت را بزنید.</string>

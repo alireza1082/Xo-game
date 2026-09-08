@@ -29,7 +29,7 @@ class HapticManager(private val context: Context) {
         if (view != null && view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)) {
             return
         }
-        vibrateMillis(25, VibrationEffect.DEFAULT_AMPLITUDE)
+        vibrateMillis(25)
     }
 
     fun performWin() {
@@ -48,10 +48,10 @@ class HapticManager(private val context: Context) {
         }
     }
 
-    private fun vibrateMillis(millis: Long, amplitude: Int = VibrationEffect.DEFAULT_AMPLITUDE) {
+    private fun vibrateMillis(millis: Long) {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val effect = VibrationEffect.createOneShot(millis, amplitude)
+                val effect = VibrationEffect.createOneShot(millis, VibrationEffect.DEFAULT_AMPLITUDE)
                 vibrator?.vibrate(effect)
             } else {
                 @Suppress("DEPRECATION")
