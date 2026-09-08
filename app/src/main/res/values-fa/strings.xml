@@ -1,0 +1,45 @@
+<resources>
+    <string name="app_name">دوز - XO</string>
+    <string name="share">اشتراک‌گذاری بازی</string>
+    <string name="share_text">بازی دوز (XO) را تجربه کنید: %1$s</string>
+    <string name="mode_single_player">بازی با هوش مصنوعی</string>
+    <string name="mode_two_player">بازی دونفره (همزمان)</string>
+    <string name="select_difficulty">انتخاب سطح سختی</string>
+    <string name="difficulty_easy">آسان</string>
+    <string name="difficulty_medium">متوسط</string>
+    <string name="difficulty_impossible">ناممکن (شکست‌ناپذیر)</string>
+
+    <string name="about_button">راهنما و درباره بازی</string>
+    <string name="about_title">درباره دوز</string>
+    <string name="app_version">نسخه %1$s</string>
+    <string name="how_to_play_title">راهنمای بازی</string>
+    <string name="how_to_play_description">بازیکنان به نوبت علامت خود را در خانه‌های خالی قرار می‌دهند.\n\nاولین بازیکنی که بتواند ۳ علامت خود را در یک ردیف افقی، عمودی یا مورب قرار دهد، برنده بازی است!\n\nاگر همه ۹ خانه پر شوند و هیچ بازیکنی ۳ ردیف نساخته باشد، بازی مساوی می‌شود.</string>
+    <string name="features_title">امکانات</string>
+    <string name="features_description">• بازی تک‌نفره با ۳ سطح هوش مصنوعی\n• بازی دونفره روی یک دستگاه\n• انیمیشن‌های روان و کنترل لمسی سریع\n• کاملاً آفلاین و بدون نیاز به اینترنت</string>
+
+    <string name="turn_x">نوبت: بازیکن X</string>
+    <string name="turn_o">نوبت: بازیکن O</string>
+    <string name="turn_you">نوبت شما (X)</string>
+    <string name="turn_ai">در حال فکر کردن…</string>
+
+    <string name="score_you">شما: %1$d</string>
+    <string name="score_ai">رایانه: %1$d</string>
+    <string name="score_draws">مساوی: %1$d</string>
+
+    <string name="winner_x">بازیکن X برنده شد! 🎉</string>
+    <string name="winner_o">بازیکن O برنده شد! 🎉</string>
+    <string name="winner_you">شما برنده شدید! 🎉</string>
+    <string name="winner_ai">رایانه برنده شد! 🤖</string>
+    <string name="game_draw">بازی مساوی شد! 🤝</string>
+
+    <string name="play_again">بازی مجدد</string>
+    <string name="reset_scores">صفر کردن امتیازها</string>
+    <string name="exit_to_menu">منوی اصلی</string>
+    <string name="dialog_game_over_title">پایان بازی</string>
+    <string name="press_back_again">برای خروج دوباره دکمه بازگشت را بزنید.</string>
+
+    <string name="cell_description">خانه %1$d، %2$s</string>
+    <string name="cell_empty">خالی</string>
+    <string name="cell_x">X</string>
+    <string name="cell_o">O</string>
+</resources>
