@@ -1,6 +1,5 @@
 package com.example.android.xo.ui
 
-import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,7 +23,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -45,11 +43,7 @@ fun HomeScreen(
 ) {
     val settings by preferences.settings.collectAsStateWithLifecycle(initialValue = GamePreferences.Settings())
     var showSetup by remember { mutableStateOf(false) }
-    val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val shareLabel = stringResource(R.string.share)
-    val shareUrl = "https://myket.ir/app/${context.packageName}"
-    val shareText = stringResource(R.string.share_text, shareUrl)
 
     Column(
         modifier = modifier.fillMaxSize().padding(horizontal = 24.dp, vertical = 40.dp),
@@ -82,13 +76,6 @@ fun HomeScreen(
             TextButton(onClick = onOpenStats) { Text(stringResource(R.string.stats_button)) }
             TextButton(onClick = onOpenAbout) { Text(stringResource(R.string.about_button)) }
         }
-        TextButton(onClick = {
-            val intent = Intent(Intent.ACTION_SEND).apply {
-                type = "text/plain"
-                putExtra(Intent.EXTRA_TEXT, shareText)
-            }
-            context.startActivity(Intent.createChooser(intent, shareLabel))
-        }) { Text(stringResource(R.string.share)) }
     }
 
     if (showSetup) {
