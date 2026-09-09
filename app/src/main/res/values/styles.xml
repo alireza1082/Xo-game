@@ -8,7 +8,9 @@
 
     <style name="AppTheme.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/splash_back</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/space_icon</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_icon_content</item>
+        <!-- core-splashscreen's supported equivalent of windowSplashScreenIconSize. -->
+        <item name="splashScreenIconSize">108dp</item>
         <item name="postSplashScreenTheme">@style/AppTheme</item>
     </style>
 </resources>
