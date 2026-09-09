@@ -35,7 +35,7 @@ class WinningLineView @JvmOverloads constructor(
     private var activeColor: Int = 0
 
     init {
-        paint.strokeWidth = resources.displayMetrics.density * 7f
+        paint.strokeWidth = resources.displayMetrics.density * 8f
     }
 
     fun startWinAnimation(winningIndices: IntArray?, lineColor: Int) {

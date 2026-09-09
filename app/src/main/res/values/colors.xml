@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#18243D</color>
-    <color name="colorPrimaryDark">#10182B</color>
-    <color name="colorAccent">#F2B84B</color>
-    <color name="colorBlue">#18243D</color>
-    <color name="colorLightBlue">#55C2B3</color>
+    <color name="colorPrimary">#172554</color>
+    <color name="colorPrimaryDark">#1E3A5F</color>
+    <color name="colorAccent">#F6B73C</color>
+    <color name="colorBlue">#172554</color>
+    <color name="colorLightBlue">#2DD4BF</color>
 
-    <color name="splash_back">#18243D</color>
-    <color name="main_back">#F5F7FB</color>
+    <color name="splash_back">#172554</color>
+    <color name="main_back">#F6F8FC</color>
     <color name="surface">#FFFFFF</color>
     <color name="surfaceElevated">#FFFFFF</color>
-    <color name="boardSurface">#18243D</color>
-    <color name="boardCell">#263653</color>
-    <color name="boardGrid">#344563</color>
+    <color name="boardSurface">#121F3D</color>
+    <color name="boardCell">#1D3157</color>
+    <color name="boardGrid">#2C4770</color>
 
-    <color name="colorTextPrimary">#172033</color>
-    <color name="colorTextSecondary">#71809A</color>
+    <color name="colorTextPrimary">#111827</color>
+    <color name="colorTextSecondary">#64748B</color>
     <color name="colorTextOnPrimary">#FFFFFF</color>
-    <color name="colorDisabled">#AAB3C2</color>
+    <color name="colorDisabled">#A8B3C7</color>
 
-    <color name="colorX">#F26B5E</color>
-    <color name="colorO">#55C2B3</color>
-    <color name="colorWinCell">#FFF1D6</color>
-    <color name="colorWinStroke">#F2B84B</color>
-    <color name="colorDraw">#F2B84B</color>
-    <color name="cell_pressed">#3B4E70</color>
-    <color name="divider">#E4E9F1</color>
+    <color name="colorX">#FF6B6B</color>
+    <color name="colorO">#2DD4BF</color>
+    <color name="colorWinCell">#FFF4D6</color>
+    <color name="colorWinStroke">#F6B73C</color>
+    <color name="colorDraw">#F6B73C</color>
+    <color name="cell_pressed">#2B4773</color>
+    <color name="divider">#E2E8F0</color>
 </resources>

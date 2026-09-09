@@ -47,6 +47,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalContext
@@ -223,6 +224,7 @@ private fun TurnCard(state: GameUiState) {
         modifier = Modifier.fillMaxWidth(),
         shape = androidx.compose.material3.MaterialTheme.shapes.medium,
         colors = CardDefaults.cardColors(containerColor = androidx.compose.material3.MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
         border = androidx.compose.foundation.BorderStroke(2.dp, color)
     ) {
         Row(
@@ -262,7 +264,8 @@ private fun ScoreCard(label: String, score: Int, accent: Color, modifier: Modifi
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(containerColor = androidx.compose.material3.MaterialTheme.colorScheme.surface),
-        border = androidx.compose.foundation.BorderStroke(2.dp, accent),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        border = androidx.compose.foundation.BorderStroke(1.5.dp, accent),
         shape = androidx.compose.material3.MaterialTheme.shapes.small
     ) {
         Column(Modifier.fillMaxWidth().padding(vertical = 10.dp), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -285,7 +288,8 @@ private fun GameBoard(
         modifier = modifier,
         shape = RoundedCornerShape(24.dp),
         color = XoGameColors.board,
-        tonalElevation = 4.dp
+        tonalElevation = 6.dp,
+        shadowElevation = 8.dp
     ) {
         Box(Modifier.fillMaxSize().padding(8.dp)) {
             Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(5.dp)) {
@@ -343,8 +347,20 @@ private fun GameCell(
     ) {
         Crossfade(targetState = cell.player, animationSpec = tween(180), label = "cellSymbol") { player ->
             when (player) {
-                Player.X -> Text("X", color = XoGameColors.x, fontSize = 54.sp, fontWeight = FontWeight.Bold)
-                Player.O -> Text("O", color = XoGameColors.o, fontSize = 54.sp, fontWeight = FontWeight.Bold)
+                Player.X -> Text(
+                    "X",
+                    modifier = Modifier.shadow(2.dp, RoundedCornerShape(12.dp)),
+                    color = XoGameColors.x,
+                    fontSize = 58.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Player.O -> Text(
+                    "O",
+                    modifier = Modifier.shadow(2.dp, RoundedCornerShape(12.dp)),
+                    color = XoGameColors.o,
+                    fontSize = 58.sp,
+                    fontWeight = FontWeight.Bold
+                )
                 null -> Spacer(Modifier.size(1.dp))
             }
         }
@@ -355,19 +371,23 @@ private fun GameCell(
 private fun WinningLine(player: Player?, indices: IntArray?, modifier: Modifier = Modifier) {
     if (indices == null || indices.size < 3) return
     val progress by animateFloatAsState(1f, tween(320), label = "winningLine")
-    Canvas(modifier = modifier.padding(18.dp)) {
+    Canvas(modifier = modifier.padding(14.dp)) {
         val first = indices.first()
         val last = indices.last()
         val start = cellCenter(first, size.width, size.height)
         val end = cellCenter(last, size.width, size.height)
         drawLine(
-            color = if (player == Player.O) XoGameColors.o else XoGameColors.x,
+            color = when (player) {
+                Player.X -> XoGameColors.x
+                Player.O -> XoGameColors.o
+                null -> XoGameColors.draw
+            },
             start = start,
             end = androidx.compose.ui.geometry.Offset(
                 start.x + (end.x - start.x) * progress,
                 start.y + (end.y - start.y) * progress
             ),
-            strokeWidth = 7.dp.toPx(),
+            strokeWidth = 8.dp.toPx(),
             cap = StrokeCap.Round
         )
     }
