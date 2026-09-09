@@ -22,7 +22,7 @@
     <color name="colorX">#FF6B6B</color>
     <color name="colorO">#2DD4BF</color>
     <color name="colorWinCell">#FFF4D6</color>
-    <color name="colorWinStroke">#F6B73C</color>
+    <color name="colorWinStroke">#A78BFA</color>
     <color name="colorDraw">#F6B73C</color>
     <color name="cell_pressed">#2B4773</color>
     <color name="divider">#E2E8F0</color>

@@ -46,9 +46,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
@@ -307,7 +307,6 @@ private fun GameBoard(
                 }
             }
             WinningLine(
-                player = state.result.winnerOrNull(),
                 indices = winningIndices,
                 modifier = Modifier.matchParentSize()
             )
@@ -346,20 +345,30 @@ private fun GameCell(
     ) {
         Crossfade(targetState = cell.player, animationSpec = tween(180), label = "cellSymbol") { player ->
             when (player) {
-                Player.X -> Text(
-                    "X",
-                    modifier = Modifier.shadow(2.dp, RoundedCornerShape(12.dp)),
-                    color = XoGameColors.x,
-                    fontSize = 58.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Player.O -> Text(
-                    "O",
-                    modifier = Modifier.shadow(2.dp, RoundedCornerShape(12.dp)),
-                    color = XoGameColors.o,
-                    fontSize = 58.sp,
-                    fontWeight = FontWeight.Bold
-                )
+                Player.X -> Canvas(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+                    val strokeWidth = 10.dp.toPx()
+                    drawLine(
+                        color = XoGameColors.x,
+                        start = androidx.compose.ui.geometry.Offset(0f, 0f),
+                        end = androidx.compose.ui.geometry.Offset(size.width, size.height),
+                        strokeWidth = strokeWidth,
+                        cap = StrokeCap.Round
+                    )
+                    drawLine(
+                        color = XoGameColors.x,
+                        start = androidx.compose.ui.geometry.Offset(size.width, 0f),
+                        end = androidx.compose.ui.geometry.Offset(0f, size.height),
+                        strokeWidth = strokeWidth,
+                        cap = StrokeCap.Round
+                    )
+                }
+                Player.O -> Canvas(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+                    drawCircle(
+                        color = XoGameColors.o,
+                        radius = (minOf(size.width, size.height) - 10.dp.toPx()) / 2f,
+                        style = Stroke(width = 10.dp.toPx())
+                    )
+                }
                 null -> Spacer(Modifier.size(1.dp))
             }
         }
@@ -367,24 +376,38 @@ private fun GameCell(
 }
 
 @Composable
-private fun WinningLine(player: Player?, indices: IntArray?, modifier: Modifier = Modifier) {
+private fun WinningLine(indices: IntArray?, modifier: Modifier = Modifier) {
     if (indices == null || indices.size < 3) return
     val progress by animateFloatAsState(1f, tween(320), label = "winningLine")
-    Canvas(modifier = modifier.padding(14.dp)) {
+    Canvas(modifier = modifier) {
+        val gap = density.run { 5.dp.toPx() }
         val first = indices.first()
         val last = indices.last()
-        val start = cellCenter(first, size.width, size.height)
-        val end = cellCenter(last, size.width, size.height)
+        val start = cellCenter(first, size.width, size.height, gap)
+        val end = cellCenter(last, size.width, size.height, gap)
+        val direction = androidx.compose.ui.geometry.Offset(end.x - start.x, end.y - start.y)
+        val distance = kotlin.math.sqrt(direction.x * direction.x + direction.y * direction.y)
+        val normalized = if (distance > 0f) {
+            androidx.compose.ui.geometry.Offset(direction.x / distance, direction.y / distance)
+        } else {
+            androidx.compose.ui.geometry.Offset.Zero
+        }
+        val cellWidth = (size.width - (2f * gap)) / 3f
+        val extension = cellWidth * 0.35f
+        val extendedStart = androidx.compose.ui.geometry.Offset(
+            start.x - normalized.x * extension,
+            start.y - normalized.y * extension
+        )
+        val extendedEnd = androidx.compose.ui.geometry.Offset(
+            end.x + normalized.x * extension,
+            end.y + normalized.y * extension
+        )
         drawLine(
-            color = when (player) {
-                Player.X -> XoGameColors.x
-                Player.O -> XoGameColors.o
-                null -> XoGameColors.draw
-            },
-            start = start,
+            color = XoGameColors.winLine,
+            start = extendedStart,
             end = androidx.compose.ui.geometry.Offset(
-                start.x + (end.x - start.x) * progress,
-                start.y + (end.y - start.y) * progress
+                extendedStart.x + (extendedEnd.x - extendedStart.x) * progress,
+                extendedStart.y + (extendedEnd.y - extendedStart.y) * progress
             ),
             strokeWidth = 8.dp.toPx(),
             cap = StrokeCap.Round
@@ -392,12 +415,20 @@ private fun WinningLine(player: Player?, indices: IntArray?, modifier: Modifier 
     }
 }
 
-private fun UiResult.winnerOrNull(): Player? = (this as? UiResult.Winner)?.player
 
-private fun cellCenter(index: Int, width: Float, height: Float): androidx.compose.ui.geometry.Offset {
+private fun cellCenter(
+    index: Int,
+    totalWidth: Float,
+    totalHeight: Float,
+    gap: Float
+): androidx.compose.ui.geometry.Offset {
     val col = index % 3
     val row = index / 3
-    return androidx.compose.ui.geometry.Offset((col + 0.5f) * width / 3f, (row + 0.5f) * height / 3f)
+    val cellWidth = (totalWidth - (2f * gap)) / 3f
+    val cellHeight = (totalHeight - (2f * gap)) / 3f
+    val centerX = col * (cellWidth + gap) + (cellWidth / 2f)
+    val centerY = row * (cellHeight + gap) + (cellHeight / 2f)
+    return androidx.compose.ui.geometry.Offset(centerX, centerY)
 }
 
 @Composable

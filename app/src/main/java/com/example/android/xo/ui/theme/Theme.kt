@@ -164,6 +164,7 @@ object XoGameColors {
     val x = Coral
     val o = NeonTeal
     val draw = Gold
+    val winLine = Color(0xFFA78BFA)
     val board = Color(0xFF121F3D)
     val boardCell = Color(0xFF1D3157)
     val boardGrid = Color(0xFF2C4770)
