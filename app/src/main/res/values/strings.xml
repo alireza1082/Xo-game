@@ -5,6 +5,8 @@
     <string name="share_text">Play XO with me: %1$s</string>
     <string name="mode_single_player">Play vs computer</string>
     <string name="mode_two_player">Play with a friend</string>
+    <string name="mode_title_two_players">XO · 2 players</string>
+    <string name="mode_title_ai">XO · %1$s</string>
     <string name="select_difficulty">Choose difficulty</string>
     <string name="difficulty_easy">Easy</string>
     <string name="difficulty_medium">Medium</string>
@@ -65,6 +67,7 @@
     <string name="stats_mode_medium">Medium</string>
     <string name="stats_mode_impossible">Impossible</string>
     <string name="stats_two_player">Two players</string>
+    <string name="stats_two_player_values">X wins: %1$d · O wins: %2$d · Draws: %3$d</string>
     <string name="stats_wins">Wins: %1$d</string>
     <string name="stats_losses">Losses: %1$d</string>
     <string name="stats_draws">Draws: %1$d</string>

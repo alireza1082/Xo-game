@@ -5,6 +5,8 @@
     <string name="share_text">بازی دوز را با من تجربه کنید: %1$s</string>
     <string name="mode_single_player">بازی با رایانه</string>
     <string name="mode_two_player">بازی با دوست</string>
+    <string name="mode_title_two_players">دوز · ۲ بازیکن</string>
+    <string name="mode_title_ai">دوز · %1$s</string>
     <string name="select_difficulty">انتخاب سطح سختی</string>
     <string name="difficulty_easy">آسان</string>
     <string name="difficulty_medium">متوسط</string>
@@ -57,6 +59,7 @@
     <string name="stats_mode_medium">متوسط</string>
     <string name="stats_mode_impossible">ناممکن</string>
     <string name="stats_two_player">بازی دونفره</string>
+    <string name="stats_two_player_values">برد X: %1$d · برد O: %2$d · مساوی: %3$d</string>
     <string name="stats_wins">برد: %1$d</string>
     <string name="stats_losses">باخت: %1$d</string>
     <string name="stats_draws">مساوی: %1$d</string>

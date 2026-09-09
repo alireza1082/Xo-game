@@ -4,11 +4,6 @@
         <item name="android:windowActionModeOverlay">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
-    </style>
-
-    <style name="AppTheme.Splash" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/splash_back</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/space_icon</item>
-        <item name="postSplashScreenTheme">@style/AppTheme</item>
+        <item name="android:windowLightNavigationBar">false</item>
     </style>
 </resources>
