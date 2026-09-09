@@ -15,7 +15,6 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -32,6 +31,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -219,12 +221,17 @@ private fun DifficultyOption(
         label = "difficultyContent"
     )
     Surface(
+        onClick = onClick,
         modifier = modifier
             .height(48.dp)
-            .selectable(selected = selected, onClick = onClick, role = Role.RadioButton),
+            .semantics {
+                role = Role.RadioButton
+                this.selected = selected
+            },
         shape = MaterialTheme.shapes.small,
         color = backgroundColor,
         contentColor = contentColor,
+        enabled = true,
         border = BorderStroke(
             width = if (selected) 0.dp else 1.dp,
             color = if (selected) backgroundColor else MaterialTheme.colorScheme.outlineVariant
@@ -277,12 +284,17 @@ private fun SymbolOption(
     val shape = MaterialTheme.shapes.medium
 
     Surface(
+        onClick = onClick,
         modifier = modifier
             .aspectRatio(1f)
             .scale(scale)
-            .selectable(selected = selected, onClick = onClick, role = Role.RadioButton),
+            .semantics {
+                role = Role.RadioButton
+                this.selected = selected
+            },
         shape = shape,
         color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = if (selected) 0.72f else 0.45f),
+        enabled = true,
         contentColor = MaterialTheme.colorScheme.onSurface,
         tonalElevation = elevation,
         border = BorderStroke(borderWidth, borderColor)

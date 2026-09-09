@@ -6,7 +6,6 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -332,18 +331,18 @@ private fun GameCell(
         stringResource(R.string.cell_description, index + 1, symbol)
     }
     val cellStateDescription = if (cell.isEmpty) stringResource(R.string.cell_empty) else symbol
-    Box(
+    Surface(
+        onClick = { onClick(index) },
         modifier = modifier
-            .clip(RoundedCornerShape(14.dp))
-            .background(XoGameColors.boardCell)
-            .clickable(enabled = enabled && cell.isEmpty, role = Role.Button) { onClick(index) }
             .semantics {
                 contentDescription = description
                 role = Role.Button
                 stateDescription = cellStateDescription
             }
             .scale(scale),
-        contentAlignment = Alignment.Center
+        shape = RoundedCornerShape(14.dp),
+        color = XoGameColors.boardCell,
+        enabled = enabled && cell.isEmpty
     ) {
         Crossfade(targetState = cell.player, animationSpec = tween(180), label = "cellSymbol") { player ->
             when (player) {
