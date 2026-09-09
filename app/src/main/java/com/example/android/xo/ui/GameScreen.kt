@@ -68,6 +68,7 @@ import com.example.android.xo.GameUiState
 import com.example.android.xo.R
 import com.example.android.xo.UiCell
 import com.example.android.xo.UiResult
+import com.example.android.xo.ads.BannerAdView
 import com.example.android.xo.audio.HapticManager
 import com.example.android.xo.engine.Player
 import com.example.android.xo.ui.theme.XoGameColors
@@ -149,7 +150,6 @@ fun GameScreen(
             humanPlayer = viewModel.humanPlayer,
             winningIndices = winningIndices,
             onCellClick = { viewModel.onEvent(GameEvent.CellClicked(it)) },
-            onNewRound = { viewModel.onEvent(GameEvent.NewRound) },
             onResetScore = { viewModel.onEvent(GameEvent.ResetScore) },
             modifier = Modifier.padding(padding)
         )
@@ -167,7 +167,6 @@ private fun GameContent(
     humanPlayer: Player,
     winningIndices: IntArray?,
     onCellClick: (Int) -> Unit,
-    onNewRound: () -> Unit,
     onResetScore: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -199,9 +198,7 @@ private fun GameContent(
         }
         Spacer(Modifier.height(16.dp))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Button(onClick = onNewRound, modifier = Modifier.weight(1f).height(54.dp)) {
-                Text(stringResource(R.string.play_again))
-            }
+            BannerAdView(modifier = Modifier.weight(1f).height(54.dp))
             OutlinedButton(onClick = onResetScore, modifier = Modifier.weight(1f).height(54.dp)) {
                 Text(stringResource(R.string.reset_scores))
             }
