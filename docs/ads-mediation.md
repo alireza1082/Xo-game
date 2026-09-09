@@ -22,7 +22,7 @@ AD_REMOTE_CONFIG_URL=https://your-backend.example/ad-provider
 SENTRY_DSN=https://public-dsn@example.ingest.sentry.io/project
 ```
 
-`AD_REMOTE_CONFIG_URL` must return exactly `tapsell`, `adivery`, or `mixed` as a UTF-8 response. Invalid responses and network failures leave the last local value unchanged. The default is `mixed`.
+`AD_REMOTE_CONFIG_URL` must return exactly `tapsell`, `adivery`, or `mixed` as a UTF-8 response. Empty URLs, timeouts, network failures, non-success responses, and invalid values are persisted as the strict fallback `mixed`.
 
 The app currently uses rewarded placements. The Tapsell adapter follows the official Tapsell Plus request/show callback API. The Adivery adapter follows the documented prepare/isLoaded/show flow. Verify current provider SDK terms, consent requirements, and placement APIs before releasing.
 

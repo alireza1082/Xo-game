@@ -39,6 +39,7 @@ class GameBoardViewModel(
 
     private var aiJob: Job? = null
     private var resultJob: Job? = null
+    private var roundCount = 0
 
     init {
         if (preferences != null) {
@@ -103,6 +104,7 @@ class GameBoardViewModel(
     }
 
     private fun finishRound(result: GameResult) {
+        roundCount++
         val winner = result.winner
         _uiState.update { it.copy(isInputLocked = true, result = result.toUiResult(humanPlayer, gameMode)) }
         if (winner != null) {
@@ -113,6 +115,9 @@ class GameBoardViewModel(
         }
         viewModelScope.launch {
             preferences?.recordGameResult(gameMode, humanPlayer, result.winner)
+        }
+        if (roundCount % 5 == 0) {
+            _effects.tryEmit(GameEffect.ShowVideoAd)
         }
         resultJob?.cancel()
         resultJob = viewModelScope.launch {
@@ -237,6 +242,7 @@ sealed interface GameEffect {
     data object MoveMade : GameEffect
     data object ShowResult : GameEffect
     data object HideResult : GameEffect
+    data object ShowVideoAd : GameEffect
     data class WinLine(val player: Player, val indices: IntArray) : GameEffect
     data class SoundChanged(val enabled: Boolean) : GameEffect
 }

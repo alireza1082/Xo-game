@@ -20,8 +20,7 @@ object AdManagerFactory {
         val observer = SentryAdMonitoring.observer()
         val repository = DataStoreAdConfigRepository(
             context = context,
-            remoteConfigUrl = networkConfig.remoteConfigUrl,
-            defaultProvider = networkConfig.provider
+            remoteConfigUrl = networkConfig.remoteConfigUrl
         )
         val tapsell = TapsellStrategy(TapsellAdGateway(context, networkConfig.tapsellAppId), observer)
         val adivery = AdiveryStrategy(

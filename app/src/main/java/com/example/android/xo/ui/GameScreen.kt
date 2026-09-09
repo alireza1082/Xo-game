@@ -47,6 +47,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import android.app.Activity
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
@@ -63,6 +64,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.android.xo.GameBoardViewModel
 import com.example.android.xo.GameEffect
+import com.example.android.xo.XoApplication
 import com.example.android.xo.GameEvent
 import com.example.android.xo.GameUiState
 import com.example.android.xo.R
@@ -86,6 +88,8 @@ fun GameScreen(
     var winningIndices by remember { mutableStateOf<IntArray?>(null) }
     val context = LocalContext.current
     val view = LocalView.current
+    val activity = context as? Activity
+    val adsManager = (context.applicationContext as? XoApplication)?.ads
     val haptic = remember(context) { HapticManager(context) }
     LaunchedEffect(uiState.isHapticEnabled) {
         haptic.isHapticEnabled = uiState.isHapticEnabled
@@ -98,6 +102,11 @@ fun GameScreen(
                     haptic.performTap(view)
                 }
                 GameEffect.ShowResult -> showResult = true
+                GameEffect.ShowVideoAd -> {
+                    if (activity != null && adsManager != null) {
+                        adsManager.showAd(activity, "video_zone")
+                    }
+                }
                 GameEffect.HideResult -> {
                     showResult = false
                     winningIndices = null
@@ -198,11 +207,12 @@ private fun GameContent(
         }
         Spacer(Modifier.height(16.dp))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            BannerAdView(modifier = Modifier.weight(1f).height(54.dp))
-            OutlinedButton(onClick = onResetScore, modifier = Modifier.weight(1f).height(54.dp)) {
+            OutlinedButton(onClick = onResetScore, modifier = Modifier.fillMaxWidth().height(54.dp)) {
                 Text(stringResource(R.string.reset_scores))
             }
         }
+        Spacer(Modifier.height(16.dp))
+        BannerAdView(modifier = Modifier.width(320.dp).height(50.dp))
     }
 }
 

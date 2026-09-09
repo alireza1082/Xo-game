@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -32,8 +33,7 @@ interface AdConfigRepository {
  */
 class DataStoreAdConfigRepository(
     context: Context,
-    private val remoteConfigUrl: String,
-    private val defaultProvider: AdProvider = AdProvider.MIXED
+    private val remoteConfigUrl: String
 ) : AdConfigRepository {
     private val dataStore = context.applicationContext.adsDataStore
 
@@ -42,7 +42,7 @@ class DataStoreAdConfigRepository(
             if (error is IOException) emit(androidx.datastore.preferences.core.emptyPreferences())
             else throw error
         }
-        .map { preferences -> AdProvider.parse(preferences[Keys.provider] ?: defaultProvider.wireValue) }
+        .map { preferences -> AdProvider.parse(preferences[Keys.provider] ?: AdProvider.MIXED.wireValue) }
 
     override suspend fun currentProvider(): AdProvider = provider.first()
 
@@ -51,28 +51,38 @@ class DataStoreAdConfigRepository(
     }
 
     override suspend fun refreshFromRemote(): AdProvider? {
-        if (remoteConfigUrl.isBlank()) return null
-        val value = withContext(Dispatchers.IO) {
-            val connection = (URL(remoteConfigUrl).openConnection() as HttpURLConnection).apply {
-                requestMethod = "GET"
-                connectTimeout = REMOTE_TIMEOUT_MS
-                readTimeout = REMOTE_TIMEOUT_MS
-                instanceFollowRedirects = true
+        val parsed = try {
+            if (remoteConfigUrl.isBlank()) {
+                null
+            } else {
+                withContext(Dispatchers.IO) {
+                    val connection = (URL(remoteConfigUrl).openConnection() as HttpURLConnection).apply {
+                        requestMethod = "GET"
+                        connectTimeout = REMOTE_TIMEOUT_MS
+                        readTimeout = REMOTE_TIMEOUT_MS
+                        instanceFollowRedirects = true
+                    }
+                    try {
+                        if (connection.responseCode !in 200..299) return@withContext null
+                        connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
+                            .trim()
+                            .takeIf { it.isNotEmpty() }
+                    } finally {
+                        connection.disconnect()
+                    }
+                }?.let { raw ->
+                    AdProvider.entries.firstOrNull { it.wireValue == raw.lowercase() }
+                }
             }
-            try {
-                if (connection.responseCode !in 200..299) return@withContext null
-                connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
-                    .trim()
-                    .takeIf { it.isNotEmpty() }
-            } finally {
-                connection.disconnect()
-            }
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (_: Throwable) {
+            null
         }
-        val parsed = value?.let { raw ->
-            AdProvider.entries.firstOrNull { it.wireValue == raw.lowercase() }
-        } ?: return null
-        saveProvider(parsed)
-        return parsed
+
+        val provider = parsed ?: AdProvider.MIXED
+        saveProvider(provider)
+        return provider
     }
 
     private object Keys {
