@@ -5,13 +5,15 @@ plugins {
     alias(libs.plugins.compose.compiler)
 }
 
-// Release signing credentials are read from local.properties (never hardcoded in VCS).
-// Uncomment the KEYSTORE_* lines in local.properties and fill in your keystore details.
+// Release signing credentials and ad credentials are read from local.properties (never hardcoded in VCS).
 val localProps = Properties().apply {
     val file = rootProject.file("local.properties")
-    if (file.exists()) {
-        file.inputStream().use { load(it) }
-    }
+    if (file.exists()) file.inputStream().use { load(it) }
+}
+
+fun buildConfigString(name: String, defaultValue: String = ""): String {
+    val value = localProps.getProperty(name, defaultValue)
+    return "\"${value.replace("\\", "\\\\").replace("\"", "\\\"")}\""
 }
 
 android {
@@ -24,6 +26,14 @@ android {
         targetSdk = 36
         versionCode = 9
         versionName = "1.0.8"
+
+        buildConfigField("String", "AD_PROVIDER", buildConfigString("AD_PROVIDER", "mixed"))
+        buildConfigField("String", "TAPSELL_APP_ID", buildConfigString("TAPSELL_APP_ID"))
+        buildConfigField("String", "TAPSELL_REWARDED_PLACEMENT", buildConfigString("TAPSELL_REWARDED_PLACEMENT"))
+        buildConfigField("String", "ADIVERY_APP_ID", buildConfigString("ADIVERY_APP_ID"))
+        buildConfigField("String", "ADIVERY_REWARDED_PLACEMENT", buildConfigString("ADIVERY_REWARDED_PLACEMENT"))
+        buildConfigField("String", "AD_REMOTE_CONFIG_URL", buildConfigString("AD_REMOTE_CONFIG_URL"))
+        buildConfigField("String", "SENTRY_DSN", buildConfigString("SENTRY_DSN"))
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -52,9 +62,7 @@ android {
                 "proguard-rules.pro"
             )
         }
-        debug {
-            applicationIdSuffix = ".debug"
-        }
+        debug { applicationIdSuffix = ".debug" }
     }
 
     compileOptions {
@@ -83,6 +91,9 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.sentry.android)
+    implementation(libs.tapsell.plus)
+    implementation(libs.adivery.sdk)
 
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
