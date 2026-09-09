@@ -7,11 +7,15 @@ import io.sentry.android.core.SentryAndroid
 
 object SentryAdMonitoring {
     fun initialize(application: Application, dsn: String?) {
-        if (dsn.isNullOrBlank()) return
-        SentryAndroid.init(application) { options ->
-            options.dsn = dsn
-            options.isSendDefaultPii = false
-            options.isEnableAutoSessionTracking = false
+        val configuredDsn = dsn?.trim().orEmpty()
+        if (configuredDsn.isEmpty()) return
+
+        runCatching {
+            SentryAndroid.init(application) { options ->
+                options.dsn = configuredDsn
+                options.isSendDefaultPii = false
+                options.isEnableAutoSessionTracking = false
+            }
         }
     }
 

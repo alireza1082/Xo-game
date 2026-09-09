@@ -18,6 +18,11 @@
         android:appCategory="game"
         android:theme="@style/AppTheme">
 
+        <!-- Sentry is initialized manually only when a valid DSN is configured. -->
+        <meta-data
+            android:name="io.sentry.auto-init"
+            android:value="false" />
+
         <activity
             android:name=".MainActivity"
             android:theme="@style/AppTheme.Splash"

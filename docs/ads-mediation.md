@@ -29,7 +29,8 @@ The app currently uses rewarded placements. The Tapsell adapter follows the offi
 ## Privacy and observability
 
 - `INTERNET` is required by ad SDKs.
-- Sentry is initialized only when `SENTRY_DSN` is non-empty.
+- Sentry auto-initialization is disabled in the manifest; it is initialized manually only when `SENTRY_DSN` is non-empty.
+- A missing or malformed DSN is ignored so observability configuration can never prevent the game from starting.
 - `sendDefaultPii` is explicitly `false`.
 - Ad no-fill, timeout, and ordinary network failures are returned as results and recorded only as breadcrumbs; they are not captured as Sentry exceptions.
 - Breadcrumbs use generic provider flow messages and never include placement IDs, app IDs, response IDs, user identifiers, URLs, or ad payloads.
