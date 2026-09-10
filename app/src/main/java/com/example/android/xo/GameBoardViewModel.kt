@@ -154,6 +154,7 @@ class GameBoardViewModel(
                 isHapticEnabled = it.isHapticEnabled
             )
         }
+        if (gameMode.isAiMode && game.activePlayer == aiPlayer) scheduleAiMove()
     }
 
     private fun toggleSound() {
