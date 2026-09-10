@@ -1,5 +1,6 @@
 package com.example.android.xo
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -13,6 +14,7 @@ import com.example.android.xo.engine.TicTacToeAi
 import com.example.android.xo.engine.TicTacToeGame
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -39,6 +41,7 @@ class GameBoardViewModel(
 
     private var aiJob: Job? = null
     private var resultJob: Job? = null
+    private var aiGeneration = 0L
     private var roundCount = 0
 
     init {
@@ -72,32 +75,37 @@ class GameBoardViewModel(
     private fun onCellClicked(index: Int) {
         if (uiState.value.isInputLocked || game.gameResult.isGameOver) return
         if (game.gameMode.isAiMode && game.activePlayer != humanPlayer) return
-        makeMove(index, game.activePlayer)
+        makeMove(index)
     }
 
-    private fun makeMove(index: Int, player: Player) {
-        if (!game.makeMove(index)) return
+    private fun makeMove(index: Int, scheduleNextAi: Boolean = true): Boolean {
+        if (!game.makeMove(index)) return false
         soundManager?.playMove()
         _effects.tryEmit(GameEffect.MoveMade)
         publishState()
 
         if (game.gameResult.isGameOver) {
             finishRound(game.gameResult)
-        } else if (game.gameMode.isAiMode && game.activePlayer == aiPlayer) {
+        } else if (scheduleNextAi && game.gameMode.isAiMode && game.activePlayer == aiPlayer) {
             scheduleAiMove()
         }
+        return true
     }
 
     private fun scheduleAiMove() {
         aiJob?.cancel()
+        val generation = ++aiGeneration
         _uiState.update { it.copy(isInputLocked = true) }
         aiJob = viewModelScope.launch {
             delay(AI_MOVE_DELAY_MS)
+            if (!isActive || generation != aiGeneration) return@launch
             if (!game.gameResult.isGameOver && game.activePlayer == aiPlayer) {
                 val move = TicTacToeAi.getBestMove(game, gameMode, aiPlayer)
-                if (move >= 0) makeMove(move, aiPlayer)
+                if (isActive && generation == aiGeneration && move >= 0) {
+                    makeMove(move, scheduleNextAi = false)
+                }
             }
-            if (!game.gameResult.isGameOver) {
+            if (isActive && generation == aiGeneration && !game.gameResult.isGameOver) {
                 _uiState.update { it.copy(isInputLocked = false) }
             }
         }
@@ -130,7 +138,7 @@ class GameBoardViewModel(
     }
 
     private fun startNewRound() {
-        aiJob?.cancel()
+        cancelAiMove()
         resultJob?.cancel()
         game.startNewRound(Player.X)
         _uiState.update {
@@ -144,7 +152,7 @@ class GameBoardViewModel(
     }
 
     private fun resetScore() {
-        aiJob?.cancel()
+        cancelAiMove()
         resultJob?.cancel()
         game.resetAll(Player.X)
         _uiState.update {
@@ -155,6 +163,12 @@ class GameBoardViewModel(
             )
         }
         if (gameMode.isAiMode && game.activePlayer == aiPlayer) scheduleAiMove()
+    }
+
+    private fun cancelAiMove() {
+        aiGeneration++
+        aiJob?.cancel()
+        aiJob = null
     }
 
     private fun toggleSound() {
@@ -186,7 +200,7 @@ class GameBoardViewModel(
     )
 
     override fun onCleared() {
-        aiJob?.cancel()
+        cancelAiMove()
         resultJob?.cancel()
         super.onCleared()
     }
@@ -216,6 +230,7 @@ sealed interface GameEvent {
     data class CellClicked(val index: Int) : GameEvent
 }
 
+@Immutable
 data class GameUiState(
     val board: List<UiCell> = List(9) { UiCell.Empty },
     val activePlayer: Player = Player.X,
@@ -228,6 +243,7 @@ data class GameUiState(
     val isHapticEnabled: Boolean = true
 )
 
+@Immutable
 data class UiCell(val player: Player?) {
     val isEmpty: Boolean get() = player == null
     companion object { val Empty = UiCell(null) }

@@ -7,6 +7,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.ensureActive
 
 /**
  * Resolves the current strategy from local configuration and owns its lifecycle.
@@ -57,11 +58,13 @@ class AdManager(
         )
         scope.launch {
             val provider = configRepository.currentProvider()
+            ensureActive()
             observer.breadcrumb("Config loaded: ${provider.wireValue.uppercase()}")
             val result = withContext(Dispatchers.Default) {
                 if (!isConfigured(provider)) AdResult.Failed(FailureReason.NOT_CONFIGURED)
                 else strategyFor(provider).loadAndShowAd(activity, request)
             }
+            ensureActive()
             onResult?.invoke(result)
         }
     }
@@ -73,7 +76,7 @@ class AdManager(
         }
         tapsellStrategy.close()
         adiveryStrategy.close()
-        scope.coroutineContext.cancel()
+        scope.cancel()
     }
 
     private fun strategyFor(provider: AdProvider): AdStrategy = when (provider) {

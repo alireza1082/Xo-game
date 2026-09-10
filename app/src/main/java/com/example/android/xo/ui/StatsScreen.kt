@@ -55,11 +55,14 @@ fun StatsScreen(preferences: GamePreferences, onBack: () -> Unit, modifier: Modi
                     }
                 }
             }
-            StatsCard(stringResource(R.string.stats_vs_ai), listOf(
-                stringResource(R.string.stats_mode_easy) to stats.easy,
-                stringResource(R.string.stats_mode_medium) to stats.medium,
-                stringResource(R.string.stats_mode_impossible) to stats.impossible
-            ))
+            StatsCard(
+                title = stringResource(R.string.stats_vs_ai),
+                rows = arrayOf(
+                    stringResource(R.string.stats_mode_easy) to stats.easy,
+                    stringResource(R.string.stats_mode_medium) to stats.medium,
+                    stringResource(R.string.stats_mode_impossible) to stats.impossible
+                )
+            )
             Card(colors = CardDefaults.cardColors(containerColor = androidx.compose.material3.MaterialTheme.colorScheme.surface)) {
                 Column(Modifier.fillMaxWidth().padding(16.dp)) {
                     Text(stringResource(R.string.stats_two_player), style = androidx.compose.material3.MaterialTheme.typography.titleLarge)
@@ -96,7 +99,7 @@ fun StatsScreen(preferences: GamePreferences, onBack: () -> Unit, modifier: Modi
 }
 
 @Composable
-private fun StatsCard(title: String, rows: List<Pair<String, GamePreferences.ModeStats>>) {
+private fun StatsCard(title: String, rows: Array<Pair<String, GamePreferences.ModeStats>>) {
     Card(colors = CardDefaults.cardColors(containerColor = androidx.compose.material3.MaterialTheme.colorScheme.surface)) {
         Column(Modifier.fillMaxWidth().padding(16.dp)) {
             Text(title, style = androidx.compose.material3.MaterialTheme.typography.titleLarge)

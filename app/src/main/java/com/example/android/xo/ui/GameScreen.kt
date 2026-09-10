@@ -2,7 +2,7 @@ package com.example.android.xo.ui
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.Crossfade
-import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -33,7 +32,6 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -45,7 +43,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import android.app.Activity
 import androidx.compose.ui.graphics.StrokeCap
@@ -302,12 +299,13 @@ private fun GameBoard(
     ) {
         Box(Modifier.fillMaxSize().padding(8.dp)) {
             Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                state.board.chunked(3).forEachIndexed { row, cells ->
+                repeat(3) { row ->
                     Row(Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-                        cells.forEachIndexed { column, cell ->
+                        repeat(3) { column ->
+                            val index = row * 3 + column
                             GameCell(
-                                cell = cell,
-                                index = row * 3 + column,
+                                cell = state.board[index],
+                                index = index,
                                 enabled = !state.isInputLocked && state.result is UiResult.InProgress,
                                 modifier = Modifier.weight(1f).fillMaxSize(),
                                 onClick = onCellClick
@@ -332,7 +330,6 @@ private fun GameCell(
     modifier: Modifier = Modifier,
     onClick: (Int) -> Unit
 ) {
-    val scale by animateFloatAsState(if (cell.isEmpty) 1f else 1f, tween(220), label = "cellScale")
     val symbol = cell.player?.name ?: ""
     val description = if (cell.player == null) {
         stringResource(R.string.cell_description, index + 1, stringResource(R.string.cell_empty))
@@ -347,8 +344,7 @@ private fun GameCell(
                 contentDescription = description
                 role = Role.Button
                 stateDescription = cellStateDescription
-            }
-            .scale(scale),
+            },
         shape = RoundedCornerShape(14.dp),
         color = XoGameColors.boardCell,
         enabled = enabled && cell.isEmpty
@@ -388,8 +384,14 @@ private fun GameCell(
 @Composable
 private fun WinningLine(indices: IntArray?, modifier: Modifier = Modifier) {
     if (indices == null || indices.size < 3) return
-    val progress by animateFloatAsState(1f, tween(320), label = "winningLine")
+    val indicesKey = indices.contentHashCode()
+    val animation = remember(indicesKey) { Animatable(0f) }
+    LaunchedEffect(indicesKey) {
+        animation.snapTo(0f)
+        animation.animateTo(1f, animationSpec = tween(320))
+    }
     Canvas(modifier = modifier) {
+        val progress = animation.value
         val gap = density.run { 5.dp.toPx() }
         val first = indices.first()
         val last = indices.last()
