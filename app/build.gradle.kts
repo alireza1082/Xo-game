@@ -11,8 +11,18 @@ val localProps = Properties().apply {
     if (file.exists()) file.inputStream().use { load(it) }
 }
 
-fun buildConfigString(name: String, defaultValue: String = ""): String {
-    val value = localProps.getProperty(name, defaultValue)
+fun resolveProp(vararg keys: String, defaultValue: String = ""): String {
+    for (key in keys) {
+        val gradleProp = project.findProperty(key) as? String
+        if (!gradleProp.isNullOrBlank()) return gradleProp
+        val localProp = localProps.getProperty(key)
+        if (!localProp.isNullOrBlank()) return localProp
+    }
+    return defaultValue
+}
+
+fun buildConfigString(vararg keys: String, defaultValue: String = ""): String {
+    val value = resolveProp(*keys, defaultValue = defaultValue)
     return "\"${value.replace("\\", "\\\\").replace("\"", "\\\"")}\""
 }
 
@@ -27,18 +37,18 @@ android {
         versionCode = 9
         versionName = "1.0.8"
 
-        buildConfigField("String", "AD_PROVIDER", buildConfigString("AD_PROVIDER", "mixed"))
-        buildConfigField("String", "TAPSELL_APP_ID", buildConfigString("TAPSELL_APP_ID"))
-        buildConfigField("String", "ADIVERY_APP_ID", buildConfigString("ADIVERY_APP_ID"))
+        buildConfigField("String", "AD_PROVIDER", buildConfigString("AD_PROVIDER", defaultValue = "mixed"))
+        buildConfigField("String", "TAPSELL_APP_ID", buildConfigString("TAPSELL_KEY", "TAPSELL_APP_ID"))
+        buildConfigField("String", "ADIVERY_APP_ID", buildConfigString("ADIVERY_KEY", "ADIVERY_APP_ID"))
         buildConfigField("String", "AD_REMOTE_CONFIG_URL", buildConfigString("AD_REMOTE_CONFIG_URL"))
-        buildConfigField("String", "SENTRY_DSN", buildConfigString("SENTRY_DSN"))
+        buildConfigField("String", "SENTRY_DSN", buildConfigString("SENTRY_DSN_XO", "SENTRY_DSN"))
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
         create("release") {
-            val keystorePath = localProps.getProperty("KEYSTORE_PATH", "")
+            val keystorePath = resolveProp("KEYSTORE_PATH")
             if (keystorePath.isNotEmpty()) {
                 storeFile = file(keystorePath)
                 storePassword = localProps.getProperty("KEYSTORE_PASSWORD", "")

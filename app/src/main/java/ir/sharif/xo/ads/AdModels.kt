@@ -1,17 +1,22 @@
 package ir.sharif.xo.ads
 
 import android.app.Activity
+import android.view.ViewGroup
 
 /** Provider choice delivered by remote configuration. */
 enum class AdProvider(val wireValue: String) {
-    TAPSELL("tapsell"),
-    ADIVERY("adivery"),
+    TAPSELL("Tapsell"),
+    ADIVERY("Adivery"),
     MIXED("mixed");
 
     companion object {
-        fun parse(value: String?): AdProvider = entries.firstOrNull {
-            it.wireValue == value?.trim()?.lowercase()
-        } ?: MIXED
+        fun parse(value: String?): AdProvider {
+            val normalized = value?.trim() ?: return MIXED
+            return entries.firstOrNull {
+                it.wireValue.equals(normalized, ignoreCase = true) ||
+                    it.name.equals(normalized, ignoreCase = true)
+            } ?: MIXED
+        }
     }
 }
 
@@ -34,7 +39,9 @@ data class AdRequest(
     val zoneId: String,
     val tapsellPlacementId: String,
     val adiveryPlacementId: String,
-    val type: AdType = AdType.REWARDED
+    val type: AdType = AdType.REWARDED,
+    /** Host view for native ads. Required by [AdType.NATIVE], ignored by other types. */
+    val nativeContainer: ViewGroup? = null
 )
 
 sealed interface AdResult {
@@ -60,11 +67,24 @@ interface Ads {
 /** A strategy owns one provider or a provider sequence. */
 interface AdStrategy {
     suspend fun loadAndShowAd(activity: Activity, request: AdRequest): AdResult
+
+    /** Tears down a native ad previously rendered into [container]. No-op when unused. */
+    fun releaseNativeAd(container: ViewGroup) = Unit
+
     fun close()
 }
 
 /** SDK bridge keeps vendor APIs isolated from mediation policy. */
 interface AdNetworkGateway {
-    suspend fun loadAndShowAd(activity: Activity, placementId: String, type: AdType): AdResult
+    suspend fun loadAndShowAd(
+        activity: Activity,
+        placementId: String,
+        type: AdType,
+        container: ViewGroup? = null
+    ): AdResult
+
+    /** Tears down a native ad previously rendered into [container]. No-op when unused. */
+    fun releaseNativeAd(container: ViewGroup) = Unit
+
     fun close()
 }

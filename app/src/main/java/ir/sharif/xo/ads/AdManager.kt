@@ -1,6 +1,7 @@
 package ir.sharif.xo.ads
 
 import android.app.Activity
+import android.view.ViewGroup
 import ir.sharif.xo.BuildConfig
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
@@ -55,6 +56,7 @@ class AdManager(
         activity: Activity,
         zoneId: String,
         type: AdType = AdType.REWARDED,
+        nativeContainer: ViewGroup? = null,
         onResult: (AdResult) -> Unit = {}
     ) {
         if (zoneId.isBlank() || activity.isFinishing || activity.isDestroyed) {
@@ -71,7 +73,8 @@ class AdManager(
             zoneId = zoneId,
             tapsellPlacementId = AdPlacements.tapsell(type),
             adiveryPlacementId = AdPlacements.adivery(type),
-            type = type
+            type = type,
+            nativeContainer = nativeContainer
         )
         scope.launch {
             val result = try {
@@ -90,6 +93,24 @@ class AdManager(
             ensureActive()
             onResult(result)
         }
+    }
+
+    /**
+     * Persists a provider override. [provider] and [showAd] both read through [configRepository],
+     * so the selection takes effect immediately. Note that [init] refreshes from remote config on
+     * startup and may overwrite this value.
+     */
+    suspend fun selectProvider(provider: AdProvider) {
+        configRepository.saveProvider(provider)
+    }
+
+    /**
+     * Tears down a rendered native ad and detaches its views. Safe to call for any provider and
+     * for containers that never held an ad.
+     */
+    fun releaseNativeAd(container: ViewGroup) {
+        tapsellStrategy.releaseNativeAd(container)
+        adiveryStrategy.releaseNativeAd(container)
     }
 
     fun close() {

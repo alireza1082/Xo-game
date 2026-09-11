@@ -1,13 +1,15 @@
 package ir.sharif.xo.ads
 
 import android.app.Activity
+import android.view.ViewGroup
 
 /** Safe default gateway used when provider SDK credentials are not configured. */
 class UnconfiguredAdGateway : AdNetworkGateway {
     override suspend fun loadAndShowAd(
         activity: Activity,
         placementId: String,
-        type: AdType
+        type: AdType,
+        container: ViewGroup?
     ): AdResult = AdResult.Failed(
         if (placementId.isBlank()) FailureReason.NOT_CONFIGURED else FailureReason.SDK_UNAVAILABLE
     )

@@ -71,7 +71,7 @@ class DataStoreAdConfigRepository(
                         connection.disconnect()
                     }
                 }?.let { raw ->
-                    AdProvider.entries.firstOrNull { it.wireValue == raw.lowercase() }
+                    AdProvider.parse(raw)
                 }
             }
         } catch (cancelled: CancellationException) {

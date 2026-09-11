@@ -1,6 +1,7 @@
 package ir.sharif.xo.ads
 
 import android.app.Activity
+import android.view.ViewGroup
 import kotlinx.coroutines.CancellationException
 
 class TapsellStrategy(
@@ -12,9 +13,12 @@ class TapsellStrategy(
             activity = activity,
             placementId = request.tapsellPlacementId,
             type = request.type,
+            container = request.nativeContainer,
             providerName = "Tapsell",
             observer = observer
         )
+
+    override fun releaseNativeAd(container: ViewGroup) = gateway.releaseNativeAd(container)
 
     override fun close() = gateway.close()
 }
@@ -28,9 +32,12 @@ class AdiveryStrategy(
             activity = activity,
             placementId = request.adiveryPlacementId,
             type = request.type,
+            container = request.nativeContainer,
             providerName = "Adivery",
             observer = observer
         )
+
+    override fun releaseNativeAd(container: ViewGroup) = gateway.releaseNativeAd(container)
 
     override fun close() = gateway.close()
 }
@@ -56,6 +63,11 @@ class MixedAdStrategy(
             }
     }
 
+    override fun releaseNativeAd(container: ViewGroup) {
+        tapsell.releaseNativeAd(container)
+        adivery.releaseNativeAd(container)
+    }
+
     override fun close() {
         tapsell.close()
         adivery.close()
@@ -76,13 +88,14 @@ private suspend fun AdNetworkGateway.safeLoadAndShow(
     activity: Activity,
     placementId: String,
     type: AdType,
+    container: ViewGroup?,
     providerName: String,
     observer: AdObserver
 ): AdResult {
     if (placementId.isBlank()) return AdResult.Failed(FailureReason.NOT_CONFIGURED)
     observer.breadcrumb("$providerName ${type.name.lowercase()} requested")
     return try {
-        loadAndShowAd(activity, placementId, type).also { result ->
+        loadAndShowAd(activity, placementId, type, container).also { result ->
             if (result is AdResult.Failed && result.reason != FailureReason.NO_FILL && result.reason != FailureReason.NETWORK) {
                 observer.breadcrumb("$providerName failed: ${result.reason}")
             }
