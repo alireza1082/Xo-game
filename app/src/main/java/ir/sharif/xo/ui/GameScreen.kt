@@ -1,5 +1,6 @@
 package ir.sharif.xo.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.Animatable
@@ -86,10 +87,22 @@ fun GameScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var showResult by remember { mutableStateOf(false) }
     var winningIndices by remember { mutableStateOf<IntArray?>(null) }
+    var isExiting by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val view = LocalView.current
     val activity = context as? Activity
     val adsManager = (context.applicationContext as? XoApplication)?.ads
+    fun handleExit() {
+        if (!isExiting) {
+            isExiting = true
+            if (activity != null && adsManager != null) {
+                adsManager.showAd(activity, "rewarded_zone", AdType.REWARDED) { onBack() }
+            } else {
+                onBack()
+            }
+        }
+    }
+    BackHandler(enabled = !isExiting) { handleExit() }
     val haptic = remember(context) { HapticManager(context) }
     LaunchedEffect(uiState.isHapticEnabled) {
         haptic.isHapticEnabled = uiState.isHapticEnabled
@@ -109,7 +122,12 @@ fun GameScreen(
                 }
                 GameEffect.ShowInterstitialAd -> {
                     if (activity != null && adsManager != null) {
-                        adsManager.showAd(activity, "interstitial_zone", AdType.INTERSTITIAL)
+                        adsManager.showAd(
+                            activity,
+                            "interstitial_zone",
+                            AdType.INTERSTITIAL,
+                            onResult = {}
+                        )
                     }
                 }
                 GameEffect.HideResult -> {
@@ -132,7 +150,7 @@ fun GameScreen(
             TopAppBar(
                 title = { Text(gameModeTitle(viewModel.gameMode)) },
                 navigationIcon = {
-                    IconButton(onClick = onBack) {
+                    IconButton(onClick = { handleExit() }) {
                         Icon(
                             painter = painterResource(R.drawable.ic_arrow_back),
                             contentDescription = stringResource(R.string.exit_to_menu)

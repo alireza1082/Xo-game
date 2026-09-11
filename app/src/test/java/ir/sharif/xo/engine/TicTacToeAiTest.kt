@@ -27,7 +27,7 @@ class TicTacToeAiTest {
         game.makeMove(4)
         game.makeMove(1)
 
-        val move = TicTacToeAi.getBestMove(game, GameMode.VS_AI_MEDIUM, Player.O)
+        val move = TicTacToeAi.getBestMove(game, GameMode.VS_AI_MEDIUM, Player.O, Random(0))
         assertEquals(2, move)
     }
 

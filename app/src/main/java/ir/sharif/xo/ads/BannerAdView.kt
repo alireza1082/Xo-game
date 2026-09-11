@@ -6,6 +6,7 @@ import android.view.Gravity
 import android.widget.FrameLayout
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
@@ -30,26 +31,28 @@ fun BannerAdView(
     val provider by adManager?.provider?.collectAsStateWithLifecycle()
         ?: androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(AdProvider.parse(BuildConfig.AD_PROVIDER)) }
 
-    AndroidView(
-        modifier = modifier,
-        factory = { viewContext -> FrameLayout(viewContext) },
-        update = { container ->
-            if (container.isNotEmpty()) return@AndroidView
-            when (provider) {
-                AdProvider.ADIVERY -> loadAdiveryBanner(container, context)
-                AdProvider.TAPSELL -> loadTapsellBanner(container)
-                AdProvider.MIXED -> loadAdiveryBanner(container, context)
+    key(provider) {
+        AndroidView(
+            modifier = modifier,
+            factory = { viewContext -> FrameLayout(viewContext) },
+            update = { container ->
+                if (container.isNotEmpty()) return@AndroidView
+                when (provider) {
+                    AdProvider.ADIVERY -> loadAdiveryBanner(container, context)
+                    AdProvider.TAPSELL -> loadTapsellBanner(container)
+                    AdProvider.MIXED -> loadAdiveryBanner(container, context)
+                }
+            },
+            onRelease = { container ->
+                val activity = container.context as? Activity
+                val responseId = container.tag as? String
+                if (activity != null && !responseId.isNullOrBlank()) {
+                    runCatching { TapsellPlus.destroyStandardBanner(activity, responseId, container) }
+                }
+                container.removeAllViews()
             }
-        },
-        onRelease = { container ->
-            val activity = container.context as? Activity
-            val responseId = container.tag as? String
-            if (activity != null && !responseId.isNullOrBlank()) {
-                runCatching { TapsellPlus.destroyStandardBanner(activity, responseId, container) }
-            }
-            container.removeAllViews()
-        }
-    )
+        )
+    }
 }
 
 private fun loadAdiveryBanner(container: FrameLayout, context: Context) {

@@ -2,6 +2,7 @@ package ir.sharif.xo.ads
 
 import android.app.Activity
 import ir.sharif.xo.BuildConfig
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -54,15 +55,15 @@ class AdManager(
         activity: Activity,
         zoneId: String,
         type: AdType = AdType.REWARDED,
-        onResult: ((AdResult) -> Unit)? = null
+        onResult: (AdResult) -> Unit = {}
     ) {
         if (zoneId.isBlank() || activity.isFinishing || activity.isDestroyed) {
-            onResult?.invoke(AdResult.Failed(FailureReason.INVALID_CONTEXT))
+            onResult(AdResult.Failed(FailureReason.INVALID_CONTEXT))
             return
         }
         synchronized(lock) {
             if (closed) {
-                onResult?.invoke(AdResult.Failed(FailureReason.SDK_UNAVAILABLE))
+                onResult(AdResult.Failed(FailureReason.SDK_UNAVAILABLE))
                 return
             }
         }
@@ -73,15 +74,21 @@ class AdManager(
             type = type
         )
         scope.launch {
-            val provider = configRepository.currentProvider()
-            ensureActive()
-            observer.breadcrumb("Config loaded: ${provider.wireValue.uppercase()}")
-            val result = withContext(Dispatchers.Default) {
-                if (!isConfigured(provider, type)) AdResult.Failed(FailureReason.NOT_CONFIGURED)
-                else strategyFor(provider).loadAndShowAd(activity, request)
+            val result = try {
+                val provider = configRepository.currentProvider()
+                ensureActive()
+                observer.breadcrumb("Config loaded: ${provider.wireValue.uppercase()}")
+                withContext(Dispatchers.Default) {
+                    if (!isConfigured(provider, type)) AdResult.Failed(FailureReason.NOT_CONFIGURED)
+                    else strategyFor(provider).loadAndShowAd(activity, request)
+                }
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (_: Throwable) {
+                AdResult.Failed(FailureReason.UNKNOWN)
             }
             ensureActive()
-            onResult?.invoke(result)
+            onResult(result)
         }
     }
 
