@@ -8,24 +8,27 @@ The app exposes typed ads through `Ads.showAd(zoneId, type)`. The game UI and XO
 
 Supported ad formats are `BANNER`, `INTERSTITIAL`, `NATIVE`, and `REWARDED`. Banner rendering is integrated in the game screen, and an interstitial is requested every five completed rounds. Native is represented by a safe gateway stub until a native UI is added.
 
-The SDK-specific code is isolated in `SdkAdGateways.kt`. Network callbacks are bridged to suspend functions, expected no-fill/network failures become `AdResult.Failed`, and ad calls are launched from an owned coroutine scope. SDK objects are released through `AdManager.close()` and no Activity is retained by the manager; the factory uses a weak reference to the currently resumed Activity.
+The SDK-specific code is isolated in `SdkAdGateways.kt`. Network callbacks are bridged to suspend functions, expected no-fill/network failures become `AdResult.Failed`, and ad calls are launched from an owned coroutine scope. SDK objects are released through `AdManager.close()` and no Activity is retained by the manager; the factory receives the currently resumed Activity through a provider.
 
 ## Local configuration
 
-Do not commit credentials or local placement configuration. Add these keys to local `local.properties` or CI Gradle properties:
+Keep provider App IDs and URLs in local `local.properties` or CI Gradle properties. Placement IDs are centralized in `AdPlacements.kt`:
+
+```kotlin
+AdPlacements.TAPSELL_BANNER
+AdPlacements.TAPSELL_REWARDED
+AdPlacements.ADIVERY_BANNER
+AdPlacements.ADIVERY_INTERSTITIAL
+AdPlacements.ADIVERY_NATIVE
+AdPlacements.ADIVERY_REWARDED
+```
+
+Add only the core configuration keys to local `local.properties` or CI Gradle properties:
 
 ```properties
 AD_PROVIDER=mixed
 TAPSELL_APP_ID=your-tapsell-app-id
-TAPSELL_BANNER_PLACEMENT=your-tapsell-banner-placement
-TAPSELL_INTERSTITIAL_PLACEMENT=your-tapsell-interstitial-placement
-TAPSELL_NATIVE_PLACEMENT=your-tapsell-native-placement
-TAPSELL_REWARDED_PLACEMENT=your-tapsell-rewarded-placement
 ADIVERY_APP_ID=your-adivery-app-id
-ADIVERY_BANNER_PLACEMENT=your-adivery-banner-placement
-ADIVERY_INTERSTITIAL_PLACEMENT=your-adivery-interstitial-placement
-ADIVERY_NATIVE_PLACEMENT=your-adivery-native-placement
-ADIVERY_REWARDED_PLACEMENT=your-adivery-rewarded-placement
 AD_REMOTE_CONFIG_URL=https://your-backend.example/ad-provider
 SENTRY_DSN=https://public-dsn@example.ingest.sentry.io/project
 ```

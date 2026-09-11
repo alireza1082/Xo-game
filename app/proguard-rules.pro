@@ -5,7 +5,7 @@
 -renamesourcefileattribute SourceFile
 
 # Enums are restored from Bundle state by name/ordinal; keep their valueOf/values entry points.
--keepclassmembers enum com.example.android.xo.engine.* {
+-keepclassmembers enum ir.sharif.xo.engine.* {
     public static **[] values();
     public static ** valueOf(java.lang.String);
 }
