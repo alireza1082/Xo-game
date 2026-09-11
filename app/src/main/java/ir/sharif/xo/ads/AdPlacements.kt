@@ -24,4 +24,13 @@ object AdPlacements {
         AdType.NATIVE -> ADIVERY_NATIVE
         AdType.REWARDED -> ADIVERY_REWARDED
     }
+
+    fun isConfigured(placementId: String): Boolean =
+        placementId.isNotBlank() && !placementId.startsWith("your_", ignoreCase = true)
+
+    fun isConfigured(type: AdType, provider: AdProvider): Boolean = when (provider) {
+        AdProvider.TAPSELL -> isConfigured(tapsell(type))
+        AdProvider.ADIVERY -> isConfigured(adivery(type))
+        AdProvider.MIXED -> isConfigured(tapsell(type)) || isConfigured(adivery(type))
+    }
 }

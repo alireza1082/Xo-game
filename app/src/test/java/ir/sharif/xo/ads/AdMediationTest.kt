@@ -14,6 +14,13 @@ class AdMediationTest {
     }
 
     @Test
+    fun placeholderPlacementsAreNotConfigured() {
+        assertEquals(false, AdPlacements.isConfigured(AdPlacements.TAPSELL_INTERSTITIAL))
+        assertEquals(false, AdPlacements.isConfigured(AdPlacements.TAPSELL_NATIVE))
+        assertEquals(true, AdPlacements.isConfigured(AdPlacements.ADIVERY_INTERSTITIAL))
+    }
+
+    @Test
     fun mixedStrategyFallsBackWhenTapsellFails() = runBlocking {
         val calls = mutableListOf<String>()
         val tapsell = fakeStrategy("tapsell", AdResult.Failed(FailureReason.NO_FILL), calls)

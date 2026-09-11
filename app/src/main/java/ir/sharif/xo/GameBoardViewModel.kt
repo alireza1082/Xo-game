@@ -125,7 +125,6 @@ class GameBoardViewModel(
             preferences?.recordGameResult(gameMode, humanPlayer, result.winner)
         }
         if (roundCount % 5 == 0) {
-            _effects.tryEmit(GameEffect.ShowVideoAd)
             _effects.tryEmit(GameEffect.ShowInterstitialAd)
         }
         resultJob?.cancel()

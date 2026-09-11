@@ -102,9 +102,13 @@ class AdManager(
     }
 
     private fun isConfigured(provider: AdProvider, type: AdType): Boolean = when (provider) {
-        AdProvider.TAPSELL -> networkConfig.tapsellAppId.isNotBlank() && AdPlacements.tapsell(type).isNotBlank()
-        AdProvider.ADIVERY -> networkConfig.adiveryAppId.isNotBlank() && AdPlacements.adivery(type).isNotBlank()
-        AdProvider.MIXED -> (networkConfig.tapsellAppId.isNotBlank() && AdPlacements.tapsell(type).isNotBlank()) ||
-            (networkConfig.adiveryAppId.isNotBlank() && AdPlacements.adivery(type).isNotBlank())
+        AdProvider.TAPSELL -> networkConfig.tapsellAppId.isNotBlank() &&
+            AdPlacements.isConfigured(type, AdProvider.TAPSELL)
+        AdProvider.ADIVERY -> networkConfig.adiveryAppId.isNotBlank() &&
+            AdPlacements.isConfigured(type, AdProvider.ADIVERY)
+        AdProvider.MIXED -> (networkConfig.tapsellAppId.isNotBlank() &&
+            AdPlacements.isConfigured(type, AdProvider.TAPSELL)) ||
+            (networkConfig.adiveryAppId.isNotBlank() &&
+                AdPlacements.isConfigured(type, AdProvider.ADIVERY))
     }
 }
