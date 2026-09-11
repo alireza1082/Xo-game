@@ -18,7 +18,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,6 +28,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -57,6 +58,7 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ir.sharif.xo.GameBoardViewModel
@@ -215,7 +217,7 @@ private fun GameContent(
             }
         }
         Spacer(Modifier.height(16.dp))
-        BannerAdView(modifier = Modifier.width(320.dp).height(50.dp))
+        BannerAdView(modifier = Modifier.fillMaxWidth().widthIn(max = 320.dp).height(50.dp))
     }
 }
 
@@ -223,9 +225,9 @@ private fun GameContent(
 private fun TurnCard(state: GameUiState) {
     val isOver = state.result !is UiResult.InProgress
     val color = when {
-        isOver -> XoGameColors.draw
-        state.activePlayer == Player.X -> XoGameColors.x
-        else -> XoGameColors.o
+        isOver -> androidx.compose.material3.MaterialTheme.colorScheme.tertiary
+        state.activePlayer == Player.X -> androidx.compose.material3.MaterialTheme.colorScheme.error
+        else -> androidx.compose.material3.MaterialTheme.colorScheme.secondary
     }
     val label = when (val result = state.result) {
         UiResult.InProgress -> if (state.activePlayer == Player.X) stringResource(R.string.turn_x) else stringResource(R.string.turn_o)
@@ -245,7 +247,14 @@ private fun TurnCard(state: GameUiState) {
         ) {
             Box(Modifier.size(10.dp).clip(CircleShape).background(color))
             Text(label, Modifier.padding(start = 10.dp).weight(1f), fontWeight = FontWeight.Bold)
-            Text(stringResource(R.string.app_tagline), fontSize = 11.sp, color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(
+                stringResource(R.string.app_tagline),
+                modifier = Modifier.padding(start = 8.dp),
+                fontSize = 11.sp,
+                color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
         }
     }
 }
@@ -256,16 +265,21 @@ private fun ScoreBoard(state: GameUiState, isAiMode: Boolean, humanPlayer: Playe
         ScoreCard(
             if (isAiMode && humanPlayer == Player.X) stringResource(R.string.score_you) else stringResource(R.string.cell_x),
             state.xScore,
-            XoGameColors.x,
+            MaterialTheme.colorScheme.error,
             Modifier.weight(1f)
         )
-        ScoreCard(stringResource(R.string.score_draws), state.drawScore, XoGameColors.draw, Modifier.weight(1f))
+        ScoreCard(
+            stringResource(R.string.score_draws),
+            state.drawScore,
+            MaterialTheme.colorScheme.tertiary,
+            Modifier.weight(1f)
+        )
         ScoreCard(
             if (isAiMode && humanPlayer == Player.O) stringResource(R.string.score_you)
             else if (isAiMode) stringResource(R.string.score_ai)
             else stringResource(R.string.cell_o),
             state.oScore,
-            XoGameColors.o,
+            MaterialTheme.colorScheme.secondary,
             Modifier.weight(1f)
         )
     }
@@ -360,14 +374,14 @@ private fun GameCell(
                 Player.X -> Canvas(modifier = Modifier.fillMaxSize().padding(16.dp)) {
                     val strokeWidth = 10.dp.toPx()
                     drawLine(
-                        color = XoGameColors.x,
+                        color = XoGameColors.xOnBoard,
                         start = androidx.compose.ui.geometry.Offset(0f, 0f),
                         end = androidx.compose.ui.geometry.Offset(size.width, size.height),
                         strokeWidth = strokeWidth,
                         cap = StrokeCap.Round
                     )
                     drawLine(
-                        color = XoGameColors.x,
+                        color = XoGameColors.xOnBoard,
                         start = androidx.compose.ui.geometry.Offset(size.width, 0f),
                         end = androidx.compose.ui.geometry.Offset(0f, size.height),
                         strokeWidth = strokeWidth,
@@ -376,7 +390,7 @@ private fun GameCell(
                 }
                 Player.O -> Canvas(modifier = Modifier.fillMaxSize().padding(16.dp)) {
                     drawCircle(
-                        color = XoGameColors.o,
+                        color = XoGameColors.oOnBoard,
                         radius = (minOf(size.width, size.height) - 10.dp.toPx()) / 2f,
                         style = Stroke(width = 10.dp.toPx())
                     )
@@ -421,7 +435,7 @@ private fun WinningLine(indices: IntArray?, modifier: Modifier = Modifier) {
             end.y + normalized.y * extension
         )
         drawLine(
-            color = XoGameColors.winLine,
+            color = XoGameColors.winLineOnBoard,
             start = extendedStart,
             end = androidx.compose.ui.geometry.Offset(
                 extendedStart.x + (extendedEnd.x - extendedStart.x) * progress,
@@ -465,8 +479,18 @@ private fun ResultDialog(result: UiResult) {
         confirmButton = {},
         title = {
             Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
-                Box(Modifier.size(56.dp).clip(CircleShape).background(XoGameColors.draw), contentAlignment = Alignment.Center) {
-                    Text(badge, color = androidx.compose.material3.MaterialTheme.colorScheme.onPrimary, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                Box(
+                    Modifier.size(56.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.tertiary),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        badge,
+                        color = MaterialTheme.colorScheme.onTertiary,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
                 Spacer(Modifier.height(16.dp))
                 Text(title, style = androidx.compose.material3.MaterialTheme.typography.headlineSmall)

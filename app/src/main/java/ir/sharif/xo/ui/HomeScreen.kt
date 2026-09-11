@@ -1,5 +1,6 @@
 package ir.sharif.xo.ui
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -259,8 +260,13 @@ private fun SymbolOption(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val accent = if (player == Player.X) ir.sharif.xo.ui.theme.XoGameColors.x
-    else ir.sharif.xo.ui.theme.XoGameColors.o
+    val accent = if (player == Player.X) {
+        if (isSystemInDarkTheme()) ir.sharif.xo.ui.theme.XoGameColors.xOnBoard
+        else ir.sharif.xo.ui.theme.XoGameColors.x
+    } else {
+        if (isSystemInDarkTheme()) ir.sharif.xo.ui.theme.XoGameColors.oOnBoard
+        else ir.sharif.xo.ui.theme.XoGameColors.o
+    }
     val borderColor by animateColorAsState(
         targetValue = if (selected) accent else MaterialTheme.colorScheme.outlineVariant,
         animationSpec = tween(220),

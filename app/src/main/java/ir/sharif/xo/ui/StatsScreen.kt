@@ -106,13 +106,12 @@ private fun StatsCard(title: String, rows: Array<Pair<String, GamePreferences.Mo
             rows.forEach { (mode, stats) ->
                 Spacer(Modifier.height(14.dp))
                 Text(mode, style = androidx.compose.material3.MaterialTheme.typography.titleMedium)
-                Text(
-                    stringResource(R.string.stats_wins, stats.wins) + "  ·  " +
-                        stringResource(R.string.stats_losses, stats.losses) + "  ·  " +
-                        stringResource(R.string.stats_draws, stats.draws) + "  ·  " +
-                        stringResource(R.string.stats_win_rate, stats.winRatePercent),
-                    color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Text(stringResource(R.string.stats_wins, stats.wins), color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(stringResource(R.string.stats_losses, stats.losses), color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(stringResource(R.string.stats_draws, stats.draws), color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(stringResource(R.string.stats_win_rate, stats.winRatePercent), color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant)
+                }
             }
         }
     }

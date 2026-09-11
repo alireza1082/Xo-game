@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">دوز</string>
-    <string name="app_tagline">یک بازی کلاسیک، با طراحی زیبا</string>
+    <string name="app_tagline">یک بازی کلاسیک، برای یک دور دیگر</string>
     <string name="mode_single_player">بازی با رایانه</string>
     <string name="mode_two_player">بازی با دوست</string>
     <string name="mode_title_two_players">دوز · ۲ بازیکن</string>
@@ -8,13 +8,13 @@
     <string name="select_difficulty">انتخاب سطح سختی</string>
     <string name="difficulty_easy">آسان</string>
     <string name="difficulty_medium">متوسط</string>
-    <string name="difficulty_impossible">ناممکن</string>
+    <string name="difficulty_impossible">غیرممکن</string>
     <string name="about_button">راهنمای بازی</string>
     <string name="about_title">درباره دوز</string>
     <string name="app_version">نسخه %1$s</string>
     <string name="how_to_play_title">راهنمای بازی</string>
     <string name="how_to_play_description">به نوبت علامت خود را در یک خانه خالی قرار دهید. اولین بازیکنی که سه علامت را افقی، عمودی یا مورب کنار هم قرار دهد، برنده است. اگر صفحه بدون برنده پر شود، بازی مساوی می‌شود.</string>
-    <string name="features_title">امکانات</string>
+    <string name="features_title">ویژگی‌های بازی</string>
     <string name="features_description">• سه سطح سختی رایانه\n• بازی دونفره روی یک دستگاه\n• بازخورد سریع و انیمیشن‌های ظریف\n• کاملاً آفلاین و خصوصی</string>
     <string name="turn_x">نوبت X</string>
     <string name="turn_o">نوبت O</string>
@@ -26,7 +26,7 @@
     <string name="game_draw">بازی مساوی شد</string>
     <string name="result_win_message">حرکت خوبی بود.</string>
     <string name="result_loss_message">بازی خوبی بود. دوباره تلاش کنید.</string>
-    <string name="result_draw_message">بازی نزدیکی بود. هیچ‌کس کوتاه نیامد.</string>
+    <string name="result_draw_message">بازی پایاپایی بود؛ آماده‌اید دوباره بازی کنیم؟</string>
     <string name="reset_scores">صفر کردن امتیازها</string>
     <string name="action_reset">صفر کردن</string>
     <string name="exit_to_menu">منوی اصلی</string>

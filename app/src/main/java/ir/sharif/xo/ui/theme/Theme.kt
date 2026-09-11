@@ -19,62 +19,66 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-private val MidnightBlue = Color(0xFF172554)
-private val NeonTeal = Color(0xFF2DD4BF)
+private val MidnightBlue = Color(0xFF102A56)
+private val NeonTeal = Color(0xFF0F766E)
 private val NeonTealDark = Color(0xFF5EEAD4)
-private val Coral = Color(0xFFFF6B6B)
-private val CoralDark = Color(0xFFFF8A8A)
-private val Gold = Color(0xFFF6B73C)
+private val Coral = Color(0xFFB42318)
+private val CoralDark = Color(0xFFFF8A80)
+private val Gold = Color(0xFF946200)
 private val GoldDark = Color(0xFFFFD166)
-private val LightBackground = Color(0xFFF6F8FC)
-private val DarkBackground = Color(0xFF0B132B)
+private val LightBackground = Color(0xFFF8FAFC)
+private val DarkBackground = Color(0xFF020617)
 private val LightSurface = Color(0xFFFFFFFF)
-private val DarkSurface = Color(0xFF141E35)
-private val LightText = Color(0xFF111827)
+private val DarkSurface = Color(0xFF0B1220)
+private val LightText = Color(0xFF0F172A)
 private val DarkText = Color(0xFFF8FAFC)
-private val LightSecondaryText = Color(0xFF64748B)
-private val DarkSecondaryText = Color(0xFFA8B3C7)
+private val LightSecondaryText = Color(0xFF475569)
+private val DarkSecondaryText = Color(0xFFCBD5E1)
 
 val XoLightColors = lightColorScheme(
     primary = MidnightBlue,
     onPrimary = Color.White,
-    primaryContainer = Color(0xFFE5EBF8),
-    onPrimaryContainer = MidnightBlue,
+    primaryContainer = Color(0xFFE5ECFA),
+    onPrimaryContainer = Color(0xFF0B1F43),
     secondary = NeonTeal,
-    onSecondary = Color(0xFF073B36),
-    secondaryContainer = Color(0xFFD2F8F1),
-    onSecondaryContainer = Color(0xFF073B36),
+    onSecondary = Color.White,
+    secondaryContainer = Color(0xFFD7F5F0),
+    onSecondaryContainer = Color(0xFF064E49),
     tertiary = Gold,
-    onTertiary = Color(0xFF3D2800),
+    onTertiary = Color.White,
     background = LightBackground,
     onBackground = LightText,
     surface = LightSurface,
     onSurface = LightText,
-    surfaceVariant = Color(0xFFE9EEF6),
+    surfaceVariant = Color(0xFFE8EEF6),
     onSurfaceVariant = LightSecondaryText,
+    outline = Color(0xFF64748B),
+    outlineVariant = Color(0xFFCBD5E1),
     error = Coral,
     onError = Color.White
 )
 
 val XoDarkColors = darkColorScheme(
     primary = NeonTealDark,
-    onPrimary = Color(0xFF073B36),
-    primaryContainer = Color(0xFF164B50),
-    onPrimaryContainer = Color(0xFFB8FFF4),
+    onPrimary = Color(0xFF042F2E),
+    primaryContainer = Color(0xFF134E4A),
+    onPrimaryContainer = Color(0xFFA7FFF2),
     secondary = NeonTealDark,
-    onSecondary = Color(0xFF073B36),
-    secondaryContainer = Color(0xFF164B50),
-    onSecondaryContainer = Color(0xFFB8FFF4),
+    onSecondary = Color(0xFF042F2E),
+    secondaryContainer = Color(0xFF134E4A),
+    onSecondaryContainer = Color(0xFFA7FFF2),
     tertiary = GoldDark,
-    onTertiary = Color(0xFF3D2800),
+    onTertiary = Color(0xFF332000),
     background = DarkBackground,
     onBackground = DarkText,
     surface = DarkSurface,
     onSurface = DarkText,
-    surfaceVariant = Color(0xFF202D49),
+    surfaceVariant = Color(0xFF17233A),
     onSurfaceVariant = DarkSecondaryText,
+    outline = Color(0xFF94A3B8),
+    outlineVariant = Color(0xFF475569),
     error = CoralDark,
-    onError = Color(0xFF4A1010)
+    onError = Color(0xFF3B0909)
 )
 
 val XoTypography = Typography(
@@ -161,13 +165,20 @@ fun XoTheme(
 }
 
 object XoGameColors {
+    // These darker accents remain readable on light surfaces.
     val x = Coral
     val o = NeonTeal
     val draw = Gold
-    val winLine = Color(0xFFA78BFA)
-    val board = Color(0xFF121F3D)
-    val boardCell = Color(0xFF1D3157)
-    val boardGrid = Color(0xFF2C4770)
+
+    // These brighter variants are reserved for the dark game board and dark result badge.
+    val xOnBoard = CoralDark
+    val oOnBoard = NeonTealDark
+    val drawOnDark = GoldDark
+    val winLine = Color(0xFF6D28D9)
+    val winLineOnBoard = Color(0xFFC4B5FD)
+    val board = Color(0xFF0B1733)
+    val boardCell = Color(0xFF172A4D)
+    val boardGrid = Color(0xFF304A73)
     val winCell = Color(0xFFFFF4D6)
     val winCellDark = Color(0xFF4A381B)
 }
