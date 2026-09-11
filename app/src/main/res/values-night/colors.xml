@@ -1,29 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#5EEAD4</color>
-    <color name="colorPrimaryDark">#0B132B</color>
-    <color name="colorAccent">#FFD166</color>
-    <color name="colorBlue">#1E3A5F</color>
-    <color name="colorLightBlue">#5EEAD4</color>
-
     <color name="splash_back">#0B132B</color>
-    <color name="main_back">#0B132B</color>
-    <color name="surface">#141E35</color>
-    <color name="surfaceElevated">#1B2945</color>
-    <color name="boardSurface">#121F3D</color>
-    <color name="boardCell">#1D3157</color>
-    <color name="boardGrid">#2C4770</color>
-
-    <color name="colorTextPrimary">#F8FAFC</color>
-    <color name="colorTextSecondary">#A8B3C7</color>
-    <color name="colorTextOnPrimary">#073B36</color>
-    <color name="colorDisabled">#64748B</color>
-
-    <color name="colorX">#FF8A8A</color>
-    <color name="colorO">#5EEAD4</color>
-    <color name="colorWinCell">#4A381B</color>
-    <color name="colorWinStroke">#A78BFA</color>
-    <color name="colorDraw">#FFD166</color>
-    <color name="cell_pressed">#2B4773</color>
-    <color name="divider">#263653</color>
 </resources>

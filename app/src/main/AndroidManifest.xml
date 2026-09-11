@@ -15,7 +15,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:isGame="true"
-        android:appCategory="game"
         android:theme="@style/AppTheme">
 
         <!-- Sentry is initialized manually only when a valid DSN is configured. -->

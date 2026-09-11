@@ -1,11 +1,15 @@
 package com.example.android.xo.ads
 
+import android.app.Activity
+import android.content.Context
 import android.view.Gravity
 import android.widget.FrameLayout
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.view.isNotEmpty
 import com.adivery.sdk.AdiveryBannerAdView
 import com.adivery.sdk.BannerSize
 import com.example.android.xo.BuildConfig
@@ -15,26 +19,30 @@ import ir.tapsell.plus.TapsellPlus
 import ir.tapsell.plus.TapsellPlusBannerType
 import ir.tapsell.plus.model.TapsellPlusAdModel
 import ir.tapsell.plus.model.TapsellPlusErrorModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
-fun BannerAdView(modifier: Modifier = Modifier) {
+fun BannerAdView(
+    modifier: Modifier = Modifier,
+    adManager: AdManager? = (LocalContext.current.applicationContext as? com.example.android.xo.XoApplication)?.ads
+) {
     val context = LocalContext.current
-    val provider = BuildConfig.AD_PROVIDER.lowercase()
+    val provider by adManager?.provider?.collectAsStateWithLifecycle()
+        ?: androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(AdProvider.parse(BuildConfig.AD_PROVIDER)) }
 
     AndroidView(
         modifier = modifier,
-        factory = { viewContext ->
-            FrameLayout(viewContext)
-        },
+        factory = { viewContext -> FrameLayout(viewContext) },
         update = { container ->
-            if (container.childCount > 0) return@AndroidView
+            if (container.isNotEmpty()) return@AndroidView
             when (provider) {
-                "adivery", "mixed" -> loadAdiveryBanner(container, context)
-                "tapsell" -> loadTapsellBanner(container)
+                AdProvider.ADIVERY -> loadAdiveryBanner(container, context)
+                AdProvider.TAPSELL -> loadTapsellBanner(container)
+                AdProvider.MIXED -> loadAdiveryBanner(container, context)
             }
         },
         onRelease = { container ->
-            val activity = container.context as? android.app.Activity
+            val activity = container.context as? Activity
             val responseId = container.tag as? String
             if (activity != null && !responseId.isNullOrBlank()) {
                 runCatching { TapsellPlus.destroyStandardBanner(activity, responseId, container) }
@@ -44,7 +52,7 @@ fun BannerAdView(modifier: Modifier = Modifier) {
     )
 }
 
-private fun loadAdiveryBanner(container: FrameLayout, context: android.content.Context) {
+private fun loadAdiveryBanner(container: FrameLayout, context: Context) {
     val placementId = BuildConfig.ADIVERY_BANNER_PLACEMENT
     if (placementId.isBlank()) return
     runCatching {
@@ -73,7 +81,7 @@ private fun loadTapsellBanner(container: FrameLayout) {
     val placementId = BuildConfig.TAPSELL_BANNER_PLACEMENT
     if (placementId.isBlank()) return
     TapsellPlus.requestStandardBannerAd(
-        container.context as? android.app.Activity ?: return,
+        container.context as? Activity ?: return,
         placementId,
         TapsellPlusBannerType.BANNER_320x50,
         object : AdRequestCallback() {
@@ -82,7 +90,7 @@ private fun loadTapsellBanner(container: FrameLayout) {
                 if (!container.isAttachedToWindow) return
                 container.tag = responseId
                 TapsellPlus.showStandardBannerAd(
-                    container.context as? android.app.Activity ?: return,
+                    container.context as? Activity ?: return,
                     responseId,
                     container,
                     object : AdShowListener() {

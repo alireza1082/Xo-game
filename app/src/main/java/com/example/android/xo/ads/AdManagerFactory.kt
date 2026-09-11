@@ -12,8 +12,14 @@ object AdManagerFactory {
         val networkConfig = AdNetworkConfig(
             provider = AdProvider.parse(BuildConfig.AD_PROVIDER),
             tapsellAppId = BuildConfig.TAPSELL_APP_ID,
+            tapsellBannerPlacementId = BuildConfig.TAPSELL_BANNER_PLACEMENT,
+            tapsellInterstitialPlacementId = BuildConfig.TAPSELL_INTERSTITIAL_PLACEMENT,
+            tapsellNativePlacementId = BuildConfig.TAPSELL_NATIVE_PLACEMENT,
             tapsellRewardedPlacementId = BuildConfig.TAPSELL_REWARDED_PLACEMENT,
             adiveryAppId = BuildConfig.ADIVERY_APP_ID,
+            adiveryBannerPlacementId = BuildConfig.ADIVERY_BANNER_PLACEMENT,
+            adiveryInterstitialPlacementId = BuildConfig.ADIVERY_INTERSTITIAL_PLACEMENT,
+            adiveryNativePlacementId = BuildConfig.ADIVERY_NATIVE_PLACEMENT,
             adiveryRewardedPlacementId = BuildConfig.ADIVERY_REWARDED_PLACEMENT,
             remoteConfigUrl = BuildConfig.AD_REMOTE_CONFIG_URL
         )
@@ -22,7 +28,7 @@ object AdManagerFactory {
             context = context,
             remoteConfigUrl = networkConfig.remoteConfigUrl
         )
-        val tapsell = TapsellStrategy(TapsellAdGateway(context, networkConfig.tapsellAppId), observer)
+        val tapsell = TapsellStrategy(TapsellAdGateway(networkConfig.tapsellAppId), observer)
         val adivery = AdiveryStrategy(
             AdiveryAdGateway(context, networkConfig.adiveryAppId),
             observer

@@ -67,6 +67,7 @@ import com.example.android.xo.GameUiState
 import com.example.android.xo.R
 import com.example.android.xo.UiCell
 import com.example.android.xo.UiResult
+import com.example.android.xo.ads.AdType
 import com.example.android.xo.ads.BannerAdView
 import com.example.android.xo.audio.HapticManager
 import com.example.android.xo.engine.Player
@@ -101,7 +102,12 @@ fun GameScreen(
                 GameEffect.ShowResult -> showResult = true
                 GameEffect.ShowVideoAd -> {
                     if (activity != null && adsManager != null) {
-                        adsManager.showAd(activity, "video_zone")
+                        adsManager.showAd(activity, "video_zone", AdType.REWARDED)
+                    }
+                }
+                GameEffect.ShowInterstitialAd -> {
+                    if (activity != null && adsManager != null) {
+                        adsManager.showAd(activity, "interstitial_zone", AdType.INTERSTITIAL)
                     }
                 }
                 GameEffect.HideResult -> {

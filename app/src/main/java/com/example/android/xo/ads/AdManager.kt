@@ -1,13 +1,17 @@
 package com.example.android.xo.ads
 
 import android.app.Activity
+import com.example.android.xo.BuildConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * Resolves the current strategy from local configuration and owns its lifecycle.
@@ -23,6 +27,12 @@ class AdManager(
     private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate),
     private val activityProvider: (() -> Activity?)? = null
 ) : Ads {
+    val provider: StateFlow<AdProvider> = configRepository.provider.stateIn(
+        scope = scope,
+        started = SharingStarted.Eagerly,
+        initialValue = AdProvider.parse(BuildConfig.AD_PROVIDER)
+    )
+
     private val lock = Any()
     private var closed = false
 
@@ -35,12 +45,17 @@ class AdManager(
         }
     }
 
-    override fun showAd(zoneId: String) {
+    override fun showAd(zoneId: String, type: AdType) {
         val activity = activityProvider?.invoke() ?: return
-        showAd(activity, zoneId)
+        showAd(activity, zoneId, type)
     }
 
-    fun showAd(activity: Activity, zoneId: String, onResult: ((AdResult) -> Unit)? = null) {
+    fun showAd(
+        activity: Activity,
+        zoneId: String,
+        type: AdType = AdType.REWARDED,
+        onResult: ((AdResult) -> Unit)? = null
+    ) {
         if (zoneId.isBlank() || activity.isFinishing || activity.isDestroyed) {
             onResult?.invoke(AdResult.Failed(FailureReason.INVALID_CONTEXT))
             return
@@ -53,15 +68,16 @@ class AdManager(
         }
         val request = AdRequest(
             zoneId = zoneId,
-            tapsellPlacementId = networkConfig.tapsellRewardedPlacementId,
-            adiveryPlacementId = networkConfig.adiveryRewardedPlacementId
+            tapsellPlacementId = networkConfig.tapsellPlacement(type),
+            adiveryPlacementId = networkConfig.adiveryPlacement(type),
+            type = type
         )
         scope.launch {
             val provider = configRepository.currentProvider()
             ensureActive()
             observer.breadcrumb("Config loaded: ${provider.wireValue.uppercase()}")
             val result = withContext(Dispatchers.Default) {
-                if (!isConfigured(provider)) AdResult.Failed(FailureReason.NOT_CONFIGURED)
+                if (!isConfigured(provider, type)) AdResult.Failed(FailureReason.NOT_CONFIGURED)
                 else strategyFor(provider).loadAndShowAd(activity, request)
             }
             ensureActive()
@@ -85,9 +101,9 @@ class AdManager(
         AdProvider.MIXED -> MixedAdStrategy(tapsellStrategy, adiveryStrategy, observer)
     }
 
-    private fun isConfigured(provider: AdProvider): Boolean = when (provider) {
-        AdProvider.TAPSELL -> networkConfig.hasTapsellPlacement()
-        AdProvider.ADIVERY -> networkConfig.hasAdiveryPlacement()
-        AdProvider.MIXED -> networkConfig.hasTapsellPlacement() || networkConfig.hasAdiveryPlacement()
+    private fun isConfigured(provider: AdProvider, type: AdType): Boolean = when (provider) {
+        AdProvider.TAPSELL -> networkConfig.hasTapsellPlacement(type)
+        AdProvider.ADIVERY -> networkConfig.hasAdiveryPlacement(type)
+        AdProvider.MIXED -> networkConfig.hasTapsellPlacement(type) || networkConfig.hasAdiveryPlacement(type)
     }
 }

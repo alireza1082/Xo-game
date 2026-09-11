@@ -1,8 +1,6 @@
 <resources>
     <string name="app_name">XO</string>
     <string name="app_tagline">A classic game, beautifully played</string>
-    <string name="share">Share game</string>
-    <string name="share_text">Play XO with me: %1$s</string>
     <string name="mode_single_player">Play vs computer</string>
     <string name="mode_two_player">Play with a friend</string>
     <string name="mode_title_two_players">XO · 2 players</string>
@@ -22,15 +20,11 @@
 
     <string name="turn_x">X to move</string>
     <string name="turn_o">O to move</string>
-    <string name="turn_you">Your move</string>
-    <string name="turn_ai">Computer is thinking…</string>
 
     <string name="score_you">You</string>
     <string name="score_ai">Computer</string>
     <string name="score_draws">Draws</string>
 
-    <string name="winner_x">X wins</string>
-    <string name="winner_o">O wins</string>
     <string name="winner_you">You win</string>
     <string name="winner_ai">Computer wins</string>
     <string name="game_draw">Draw game</string>
@@ -38,24 +32,16 @@
     <string name="result_loss_message">Good game. Try a new round.</string>
     <string name="result_draw_message">A close match. Nobody gives in.</string>
 
-    <string name="play_again">New round</string>
     <string name="reset_scores">Reset scores</string>
-    <string name="reset_scores_title">Reset scores?</string>
-    <string name="reset_scores_message">This will clear the scores for the current match.</string>
     <string name="action_reset">Reset</string>
     <string name="exit_to_menu">Main menu</string>
-    <string name="dialog_game_over_title">Round complete</string>
-    <string name="press_back_again">Press back again to exit.</string>
 
     <string name="cell_description">Cell %1$d, %2$s</string>
-    <string name="cell_accessibility_hint">Game board cell</string>
     <string name="cell_empty">empty</string>
     <string name="cell_x">X</string>
     <string name="cell_o">O</string>
 
     <string name="sound_toggle">Toggle sound</string>
-    <string name="sound_enabled">Sound on</string>
-    <string name="sound_disabled">Sound off</string>
 
     <string name="stats_button">Statistics</string>
     <string name="stats_title">Statistics</string>
@@ -75,7 +61,6 @@
     <string name="stats_reset_button">Reset all statistics</string>
     <string name="stats_reset_confirm_title">Reset statistics?</string>
     <string name="stats_reset_confirm_msg">All game records and statistics will be cleared.</string>
-    <string name="stats_reset_success">Statistics reset.</string>
 
     <string name="dialog_ai_title">Set up your match</string>
     <string name="select_symbol">Choose your mark</string>

@@ -15,23 +15,54 @@ enum class AdProvider(val wireValue: String) {
     }
 }
 
+enum class AdType {
+    BANNER,
+    INTERSTITIAL,
+    NATIVE,
+    REWARDED
+}
+
 /** Credentials and placements are supplied by build configuration, never by UI code. */
 data class AdNetworkConfig(
     val provider: AdProvider = AdProvider.MIXED,
     val tapsellAppId: String = "",
+    val tapsellBannerPlacementId: String = "",
+    val tapsellInterstitialPlacementId: String = "",
+    val tapsellNativePlacementId: String = "",
     val tapsellRewardedPlacementId: String = "",
     val adiveryAppId: String = "",
+    val adiveryBannerPlacementId: String = "",
+    val adiveryInterstitialPlacementId: String = "",
+    val adiveryNativePlacementId: String = "",
     val adiveryRewardedPlacementId: String = "",
     val remoteConfigUrl: String = ""
 ) {
-    fun hasTapsellPlacement() = tapsellAppId.isNotBlank() && tapsellRewardedPlacementId.isNotBlank()
-    fun hasAdiveryPlacement() = adiveryAppId.isNotBlank() && adiveryRewardedPlacementId.isNotBlank()
+    fun hasTapsellPlacement(type: AdType): Boolean =
+        tapsellAppId.isNotBlank() && tapsellPlacement(type).isNotBlank()
+
+    fun hasAdiveryPlacement(type: AdType): Boolean =
+        adiveryAppId.isNotBlank() && adiveryPlacement(type).isNotBlank()
+
+    fun tapsellPlacement(type: AdType): String = when (type) {
+        AdType.BANNER -> tapsellBannerPlacementId
+        AdType.INTERSTITIAL -> tapsellInterstitialPlacementId
+        AdType.NATIVE -> tapsellNativePlacementId
+        AdType.REWARDED -> tapsellRewardedPlacementId
+    }
+
+    fun adiveryPlacement(type: AdType): String = when (type) {
+        AdType.BANNER -> adiveryBannerPlacementId
+        AdType.INTERSTITIAL -> adiveryInterstitialPlacementId
+        AdType.NATIVE -> adiveryNativePlacementId
+        AdType.REWARDED -> adiveryRewardedPlacementId
+    }
 }
 
 data class AdRequest(
     val zoneId: String,
     val tapsellPlacementId: String,
-    val adiveryPlacementId: String
+    val adiveryPlacementId: String,
+    val type: AdType = AdType.REWARDED
 )
 
 sealed interface AdResult {
@@ -51,7 +82,7 @@ enum class FailureReason {
 
 /** Provider-neutral entry point used by the application. */
 interface Ads {
-    fun showAd(zoneId: String)
+    fun showAd(zoneId: String, type: AdType = AdType.REWARDED)
 }
 
 /** A strategy owns one provider or a provider sequence. */
@@ -62,6 +93,6 @@ interface AdStrategy {
 
 /** SDK bridge keeps vendor APIs isolated from mediation policy. */
 interface AdNetworkGateway {
-    suspend fun loadAndShowAd(activity: Activity, placementId: String): AdResult
+    suspend fun loadAndShowAd(activity: Activity, placementId: String, type: AdType): AdResult
     fun close()
 }

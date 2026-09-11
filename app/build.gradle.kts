@@ -23,17 +23,21 @@ android {
     defaultConfig {
         applicationId = "ir.sharif.xo"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 9
         versionName = "1.0.8"
 
         buildConfigField("String", "AD_PROVIDER", buildConfigString("AD_PROVIDER", "mixed"))
         buildConfigField("String", "TAPSELL_APP_ID", buildConfigString("TAPSELL_APP_ID"))
-        buildConfigField("String", "TAPSELL_REWARDED_PLACEMENT", buildConfigString("TAPSELL_REWARDED_PLACEMENT"))
         buildConfigField("String", "TAPSELL_BANNER_PLACEMENT", buildConfigString("TAPSELL_BANNER_PLACEMENT"))
+        buildConfigField("String", "TAPSELL_INTERSTITIAL_PLACEMENT", buildConfigString("TAPSELL_INTERSTITIAL_PLACEMENT"))
+        buildConfigField("String", "TAPSELL_NATIVE_PLACEMENT", buildConfigString("TAPSELL_NATIVE_PLACEMENT"))
+        buildConfigField("String", "TAPSELL_REWARDED_PLACEMENT", buildConfigString("TAPSELL_REWARDED_PLACEMENT"))
         buildConfigField("String", "ADIVERY_APP_ID", buildConfigString("ADIVERY_APP_ID"))
-        buildConfigField("String", "ADIVERY_REWARDED_PLACEMENT", buildConfigString("ADIVERY_REWARDED_PLACEMENT"))
         buildConfigField("String", "ADIVERY_BANNER_PLACEMENT", buildConfigString("ADIVERY_BANNER_PLACEMENT"))
+        buildConfigField("String", "ADIVERY_INTERSTITIAL_PLACEMENT", buildConfigString("ADIVERY_INTERSTITIAL_PLACEMENT"))
+        buildConfigField("String", "ADIVERY_NATIVE_PLACEMENT", buildConfigString("ADIVERY_NATIVE_PLACEMENT"))
+        buildConfigField("String", "ADIVERY_REWARDED_PLACEMENT", buildConfigString("ADIVERY_REWARDED_PLACEMENT"))
         buildConfigField("String", "AD_REMOTE_CONFIG_URL", buildConfigString("AD_REMOTE_CONFIG_URL"))
         buildConfigField("String", "SENTRY_DSN", buildConfigString("SENTRY_DSN"))
 

@@ -126,6 +126,7 @@ class GameBoardViewModel(
         }
         if (roundCount % 5 == 0) {
             _effects.tryEmit(GameEffect.ShowVideoAd)
+            _effects.tryEmit(GameEffect.ShowInterstitialAd)
         }
         resultJob?.cancel()
         resultJob = viewModelScope.launch {
@@ -202,7 +203,6 @@ class GameBoardViewModel(
     override fun onCleared() {
         cancelAiMove()
         resultJob?.cancel()
-        super.onCleared()
     }
 
     companion object {
@@ -260,6 +260,7 @@ sealed interface GameEffect {
     data object ShowResult : GameEffect
     data object HideResult : GameEffect
     data object ShowVideoAd : GameEffect
+    data object ShowInterstitialAd : GameEffect
     data class WinLine(val player: Player, val indices: IntArray) : GameEffect
     data class SoundChanged(val enabled: Boolean) : GameEffect
 }
