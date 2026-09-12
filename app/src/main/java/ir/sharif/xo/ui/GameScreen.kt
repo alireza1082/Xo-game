@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
@@ -47,6 +48,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import android.app.Activity
+import android.widget.FrameLayout
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
@@ -62,6 +64,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import ir.sharif.xo.GameBoardViewModel
 import ir.sharif.xo.GameEffect
 import ir.sharif.xo.XoApplication
@@ -70,6 +73,7 @@ import ir.sharif.xo.GameUiState
 import ir.sharif.xo.R
 import ir.sharif.xo.UiCell
 import ir.sharif.xo.UiResult
+import ir.sharif.xo.ads.AdManager
 import ir.sharif.xo.ads.AdType
 import ir.sharif.xo.ads.BannerAdView
 import ir.sharif.xo.audio.HapticManager
@@ -183,6 +187,8 @@ fun GameScreen(
             winningIndices = winningIndices,
             onCellClick = { viewModel.onEvent(GameEvent.CellClicked(it)) },
             onResetScore = { viewModel.onEvent(GameEvent.ResetScore) },
+            adsManager = adsManager,
+            activity = activity,
             modifier = Modifier.padding(padding)
         )
     }
@@ -200,6 +206,8 @@ private fun GameContent(
     winningIndices: IntArray?,
     onCellClick: (Int) -> Unit,
     onResetScore: () -> Unit,
+    adsManager: AdManager?,
+    activity: Activity?,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -235,8 +243,40 @@ private fun GameContent(
             }
         }
         Spacer(Modifier.height(16.dp))
+        NativeGameAdView(
+            adsManager = adsManager,
+            activity = activity,
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(min = 96.dp, max = 132.dp)
+        )
+        Spacer(Modifier.height(12.dp))
         BannerAdView(modifier = Modifier.fillMaxWidth().widthIn(max = 320.dp).height(50.dp))
     }
+}
+
+@Composable
+private fun NativeGameAdView(
+    adsManager: AdManager?,
+    activity: Activity?,
+    modifier: Modifier = Modifier
+) {
+    AndroidView(
+        modifier = modifier,
+        factory = { viewContext ->
+            FrameLayout(viewContext).also { container ->
+                if (adsManager != null && activity != null) {
+                    adsManager.showAd(
+                        activity = activity,
+                        zoneId = "game_native",
+                        type = AdType.NATIVE,
+                        nativeContainer = container
+                    )
+                }
+            }
+        },
+        onRelease = { container -> adsManager?.releaseNativeAd(container) }
+    )
 }
 
 @Composable
