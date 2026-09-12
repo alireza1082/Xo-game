@@ -12,9 +12,6 @@ import ir.tapsell.plus.AdRequestCallback
 import ir.tapsell.plus.AdShowListener
 import ir.tapsell.plus.NativeManager
 import ir.tapsell.plus.TapsellPlus
-import ir.tapsell.plus.TapsellPlusInitListener
-import ir.tapsell.plus.model.AdNetworks
-import ir.tapsell.plus.model.AdNetworkError
 import ir.tapsell.plus.model.TapsellPlusAdModel
 import ir.tapsell.plus.model.TapsellPlusErrorModel
 import kotlinx.coroutines.CancellationException
@@ -26,6 +23,7 @@ import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlin.coroutines.resume
+import kotlin.time.Duration.Companion.milliseconds
 
 /** Native loads get the same budget as Adivery's interstitial/rewarded polling. */
 private const val NATIVE_TIMEOUT_MS = 10_000L
@@ -135,7 +133,7 @@ class TapsellAdGateway(
     ): AdResult = withContext(Dispatchers.Main.immediate) {
         container.tag = null
         container.removeAllViews()
-        withTimeoutOrNull(NATIVE_TIMEOUT_MS) {
+        withTimeoutOrNull(NATIVE_TIMEOUT_MS.milliseconds) {
             suspendCancellableCoroutine<AdResult> { continuation ->
                 TapsellPlus.requestNativeAd(activity, placementId, object : AdRequestCallback() {
                     override fun response(ad: TapsellPlusAdModel) {
@@ -193,13 +191,16 @@ class TapsellAdGateway(
         if (initialized) return@withLock true
         withContext(Dispatchers.Main.immediate) {
             suspendCancellableCoroutine { continuation ->
-                TapsellPlus.initialize(activity, appId, object : TapsellPlusInitListener {
-                    override fun onInitializeSuccess(adNetworks: AdNetworks) {
+                TapsellPlus.initialize(activity, appId, object : ir.tapsell.plus.TapsellPlusInitListener {
+                    override fun onInitializeSuccess(adNetworks: ir.tapsell.plus.model.AdNetworks) {
                         initialized = true
                         if (continuation.isActive) continuation.resume(true)
                     }
 
-                    override fun onInitializeFailed(adNetwork: AdNetworks, error: AdNetworkError) {
+                    override fun onInitializeFailed(
+                        adNetwork: ir.tapsell.plus.model.AdNetworks,
+                        error: ir.tapsell.plus.model.AdNetworkError
+                    ) {
                         if (continuation.isActive) continuation.resume(false)
                     }
                 })
@@ -222,7 +223,7 @@ private fun classifyFailure(message: String): AdResult.Failed {
 /** Adivery gateway. */
 class AdiveryAdGateway(
     application: Context,
-    appId: String,
+    private val appId: String,
     private val timeoutMillis: Long = 10_000L,
     private val pollMillis: Long = 250L
 ) : AdNetworkGateway {
@@ -232,7 +233,9 @@ class AdiveryAdGateway(
 
     init {
         if (appId.isNotBlank()) {
-            configured = runCatching { app?.let { Adivery.configure(it, appId) } != null }.getOrDefault(false)
+            configured = runCatching {
+                app?.let { Adivery.configure(it, appId) } != null
+            }.getOrDefault(false)
         }
     }
 
@@ -275,7 +278,7 @@ class AdiveryAdGateway(
 
     private suspend fun showNative(placementId: String, container: ViewGroup): AdResult =
         withContext(Dispatchers.Main.immediate) {
-            withTimeoutOrNull(timeoutMillis) {
+            withTimeoutOrNull(timeoutMillis.milliseconds) {
                 suspendCancellableCoroutine<AdResult> { continuation ->
                     container.removeAllViews()
                     val nativeAdView = AdiveryNativeAdView(container.context).apply {
@@ -311,7 +314,7 @@ class AdiveryAdGateway(
                 withContext(Dispatchers.Main.immediate) { Adivery.showAd(placementId) }
                 return AdResult.Shown
             }
-            delay(pollMillis)
+            delay(pollMillis.milliseconds)
             elapsed += pollMillis
         }
         return AdResult.Failed(FailureReason.NO_FILL)

@@ -387,15 +387,14 @@ private fun AdTesterDialog(onDismiss: () -> Unit) {
         container: ViewGroup? = null,
         onShown: () -> Unit = {}
     ) {
-        val manager = ads
-        if (manager == null || activity == null) {
+        if (ads == null || activity == null) {
             val message = "$label: Failed: ${FailureReason.INVALID_CONTEXT}"
             lastResult = message
             toast(message)
             return
         }
         lastResult = "$label: loading..."
-        manager.showAd(activity, "test_${type.name.lowercase()}", type, container) { result ->
+        ads.showAd(activity, "test_${type.name.lowercase()}", type, container) { result ->
             val message = "$label: ${result.describe()}"
             lastResult = message
             toast(message)

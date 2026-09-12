@@ -14,9 +14,10 @@ class AdMediationTest {
     }
 
     @Test
-    fun placeholderPlacementsAreNotConfigured() {
-        assertEquals(false, AdPlacements.isConfigured(AdPlacements.TAPSELL_INTERSTITIAL))
-        assertEquals(false, AdPlacements.isConfigured(AdPlacements.TAPSELL_NATIVE))
+    fun configuredTapsellPlacementsAreAvailable() {
+        assertEquals(true, AdPlacements.isConfigured(AdPlacements.TAPSELL_BANNER))
+        assertEquals(true, AdPlacements.isConfigured(AdPlacements.TAPSELL_INTERSTITIAL))
+        assertEquals(true, AdPlacements.isConfigured(AdPlacements.TAPSELL_REWARDED))
         assertEquals(true, AdPlacements.isConfigured(AdPlacements.ADIVERY_INTERSTITIAL))
     }
 
