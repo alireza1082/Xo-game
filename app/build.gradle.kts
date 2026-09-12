@@ -34,8 +34,8 @@ android {
         applicationId = "ir.sharif.xo"
         minSdk = 24
         targetSdk = 37
-        versionCode = 9
-        versionName = "1.0.8"
+        versionCode = 20
+        versionName = "2.0.0"
 
         buildConfigField("String", "AD_PROVIDER", buildConfigString("AD_PROVIDER", defaultValue = "mixed"))
         buildConfigField("String", "TAPSELL_APP_ID", buildConfigString("TAPSELL_KEY", "TAPSELL_APP_ID"))
