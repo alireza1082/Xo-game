@@ -1,7 +1,5 @@
 package ir.sharif.xo.engine
 
-import java.util.Arrays
-
 class GameResult private constructor(
     val status: Status,
     indices: IntArray?,
@@ -31,12 +29,12 @@ class GameResult private constructor(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is GameResult) return false
-        return status == other.status && Arrays.equals(storedWinningIndices, other.storedWinningIndices)
+        return status == other.status && storedWinningIndices.contentEquals(other.storedWinningIndices)
     }
 
     override fun hashCode(): Int {
         var result = status.hashCode()
-        result = 31 * result + Arrays.hashCode(storedWinningIndices)
+        result = 31 * result + storedWinningIndices.contentHashCode()
         return result
     }
 

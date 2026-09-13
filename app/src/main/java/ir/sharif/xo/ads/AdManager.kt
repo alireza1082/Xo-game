@@ -18,7 +18,7 @@ import kotlinx.coroutines.withContext
 /**
  * Resolves the current strategy from local configuration and owns its lifecycle.
  * Calls return immediately; SDK work is dispatched off the UI thread and SDK callbacks are
- * marshalled back by the provider gateways when required.
+ * marshaled back by the provider gateways when required.
  */
 class AdManager(
     private val configRepository: AdConfigRepository,

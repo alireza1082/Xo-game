@@ -3,6 +3,7 @@ package ir.sharif.xo
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
+import android.util.Log
 import ir.sharif.xo.ads.AdManager
 import ir.sharif.xo.ads.AdManagerFactory
 import ir.sharif.xo.ads.SentryAdMonitoring
@@ -16,6 +17,8 @@ class XoApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        ir.tapsell.plus.TapsellPlus.initialize(this, BuildConfig.TAPSELL_APP_ID, null)
+        ir.tapsell.plus.TapsellPlus.setDebugMode(Log.DEBUG)
         SentryAdMonitoring.initialize(this, BuildConfig.SENTRY_DSN)
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
             override fun onActivityResumed(activity: Activity) {

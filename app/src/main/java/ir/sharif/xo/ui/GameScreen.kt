@@ -118,12 +118,14 @@ fun GameScreen(
                 GameEffect.MoveMade -> {
                     haptic.performTap(view)
                 }
+
                 GameEffect.ShowResult -> showResult = true
                 GameEffect.ShowVideoAd -> {
                     if (activity != null && adsManager != null) {
                         adsManager.showAd(activity, "video_zone", AdType.REWARDED)
                     }
                 }
+
                 GameEffect.ShowInterstitialAd -> {
                     if (activity != null && adsManager != null) {
                         adsManager.showAd(
@@ -134,14 +136,17 @@ fun GameScreen(
                         )
                     }
                 }
+
                 GameEffect.HideResult -> {
                     showResult = false
                     winningIndices = null
                 }
+
                 is GameEffect.WinLine -> {
                     winningIndices = effect.indices
                     haptic.performWin()
                 }
+
                 is GameEffect.SoundChanged -> Unit
             }
         }
@@ -149,7 +154,7 @@ fun GameScreen(
 
     Scaffold(
         modifier = modifier,
-        containerColor = androidx.compose.material3.MaterialTheme.colorScheme.background,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = { Text(gameModeTitle(viewModel.gameMode)) },
@@ -172,10 +177,10 @@ fun GameScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = androidx.compose.material3.MaterialTheme.colorScheme.primary,
-                    titleContentColor = androidx.compose.material3.MaterialTheme.colorScheme.onPrimary,
-                    navigationIconContentColor = androidx.compose.material3.MaterialTheme.colorScheme.onPrimary,
-                    actionIconContentColor = androidx.compose.material3.MaterialTheme.colorScheme.onPrimary
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
+                    actionIconContentColor = MaterialTheme.colorScheme.onPrimary
                 )
             )
         }
@@ -233,12 +238,22 @@ private fun GameContent(
                 state = state,
                 winningIndices = winningIndices,
                 onCellClick = onCellClick,
-                modifier = Modifier.size(boardSize).aspectRatio(1f)
+                modifier = Modifier
+                    .size(boardSize)
+                    .aspectRatio(1f)
             )
         }
         Spacer(Modifier.height(16.dp))
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            OutlinedButton(onClick = onResetScore, modifier = Modifier.fillMaxWidth().height(54.dp)) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            OutlinedButton(
+                onClick = onResetScore,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(54.dp)
+            ) {
                 Text(stringResource(R.string.reset_scores))
             }
         }
@@ -251,7 +266,10 @@ private fun GameContent(
                 .heightIn(min = 96.dp, max = 132.dp)
         )
         Spacer(Modifier.height(12.dp))
-        BannerAdView(modifier = Modifier.fillMaxWidth().widthIn(max = 320.dp).height(50.dp))
+        BannerAdView(modifier = Modifier
+            .fillMaxWidth()
+            .widthIn(max = 320.dp)
+            .height(50.dp))
     }
 }
 
@@ -283,33 +301,45 @@ private fun NativeGameAdView(
 private fun TurnCard(state: GameUiState) {
     val isOver = state.result !is UiResult.InProgress
     val color = when {
-        isOver -> androidx.compose.material3.MaterialTheme.colorScheme.tertiary
-        state.activePlayer == Player.X -> androidx.compose.material3.MaterialTheme.colorScheme.error
-        else -> androidx.compose.material3.MaterialTheme.colorScheme.secondary
+        isOver -> MaterialTheme.colorScheme.tertiary
+        state.activePlayer == Player.X -> MaterialTheme.colorScheme.error
+        else -> MaterialTheme.colorScheme.secondary
     }
     val label = when (val result = state.result) {
-        UiResult.InProgress -> if (state.activePlayer == Player.X) stringResource(R.string.turn_x) else stringResource(R.string.turn_o)
+        UiResult.InProgress -> if (state.activePlayer == Player.X) stringResource(R.string.turn_x) else stringResource(
+            R.string.turn_o
+        )
+
         UiResult.Draw -> stringResource(R.string.game_draw)
-        is UiResult.Winner -> if (result.isHumanWinner) stringResource(R.string.winner_you) else stringResource(R.string.winner_ai)
+        is UiResult.Winner -> if (result.isHumanWinner) stringResource(R.string.winner_you) else stringResource(
+            R.string.winner_ai
+        )
     }
     Card(
         modifier = Modifier.fillMaxWidth(),
-        shape = androidx.compose.material3.MaterialTheme.shapes.medium,
-        colors = CardDefaults.cardColors(containerColor = androidx.compose.material3.MaterialTheme.colorScheme.surface),
+        shape = MaterialTheme.shapes.medium,
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
         border = androidx.compose.foundation.BorderStroke(2.dp, color)
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Box(Modifier.size(10.dp).clip(CircleShape).background(color))
-            Text(label, Modifier.padding(start = 10.dp).weight(1f), fontWeight = FontWeight.Bold)
+            Box(Modifier
+                .size(10.dp)
+                .clip(CircleShape)
+                .background(color))
+            Text(label, Modifier
+                .padding(start = 10.dp)
+                .weight(1f), fontWeight = FontWeight.Bold)
             Text(
                 stringResource(R.string.app_tagline),
                 modifier = Modifier.padding(start = 8.dp),
                 fontSize = 11.sp,
-                color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -321,7 +351,9 @@ private fun TurnCard(state: GameUiState) {
 private fun ScoreBoard(state: GameUiState, isAiMode: Boolean, humanPlayer: Player) {
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         ScoreCard(
-            if (isAiMode && humanPlayer == Player.X) stringResource(R.string.score_you) else stringResource(R.string.cell_x),
+            if (isAiMode && humanPlayer == Player.X) stringResource(R.string.score_you) else stringResource(
+                R.string.cell_x
+            ),
             state.xScore,
             MaterialTheme.colorScheme.error,
             Modifier.weight(1f)
@@ -347,15 +379,29 @@ private fun ScoreBoard(state: GameUiState, isAiMode: Boolean, humanPlayer: Playe
 private fun ScoreCard(label: String, score: Int, accent: Color, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(containerColor = androidx.compose.material3.MaterialTheme.colorScheme.surface),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         border = androidx.compose.foundation.BorderStroke(1.5.dp, accent),
-        shape = androidx.compose.material3.MaterialTheme.shapes.small
+        shape = MaterialTheme.shapes.small
     ) {
-        Column(Modifier.fillMaxWidth().padding(vertical = 10.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(label, color = accent, style = androidx.compose.material3.MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+        Column(
+            Modifier
+                .fillMaxWidth()
+                .padding(vertical = 10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                label,
+                color = accent,
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.Bold
+            )
             AnimatedContent(targetState = score, label = "score") { value ->
-                Text(value.toString(), style = androidx.compose.material3.MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+                Text(
+                    value.toString(),
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
     }
@@ -375,7 +421,9 @@ private fun GameBoard(
         tonalElevation = 6.dp,
         shadowElevation = 8.dp
     ) {
-        Box(Modifier.fillMaxSize().padding(8.dp)) {
+        Box(Modifier
+            .fillMaxSize()
+            .padding(8.dp)) {
             Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(5.dp)) {
                 repeat(3) { row ->
                     Row(Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
@@ -385,7 +433,9 @@ private fun GameBoard(
                                 cell = state.board[index],
                                 index = index,
                                 enabled = !state.isInputLocked && state.result is UiResult.InProgress,
-                                modifier = Modifier.weight(1f).fillMaxSize(),
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .fillMaxSize(),
                                 onClick = onCellClick
                             )
                         }
@@ -427,9 +477,15 @@ private fun GameCell(
         color = XoGameColors.boardCell,
         enabled = enabled && cell.isEmpty
     ) {
-        Crossfade(targetState = cell.player, animationSpec = tween(180), label = "cellSymbol") { player ->
+        Crossfade(
+            targetState = cell.player,
+            animationSpec = tween(180),
+            label = "cellSymbol"
+        ) { player ->
             when (player) {
-                Player.X -> Canvas(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+                Player.X -> Canvas(modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)) {
                     val strokeWidth = 10.dp.toPx()
                     drawLine(
                         color = XoGameColors.xOnBoard,
@@ -446,13 +502,17 @@ private fun GameCell(
                         cap = StrokeCap.Round
                     )
                 }
-                Player.O -> Canvas(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+
+                Player.O -> Canvas(modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)) {
                     drawCircle(
                         color = XoGameColors.oOnBoard,
                         radius = (minOf(size.width, size.height) - 10.dp.toPx()) / 2f,
                         style = Stroke(width = 10.dp.toPx())
                     )
                 }
+
                 null -> Spacer(Modifier.size(1.dp))
             }
         }
@@ -524,21 +584,39 @@ private fun cellCenter(
 @Composable
 private fun ResultDialog(result: UiResult) {
     val (title, message, badge) = when (result) {
-        UiResult.Draw -> Triple(stringResource(R.string.game_draw), stringResource(R.string.result_draw_message), "=")
+        UiResult.Draw -> Triple(
+            stringResource(R.string.game_draw),
+            stringResource(R.string.result_draw_message),
+            "="
+        )
+
         is UiResult.Winner -> if (result.isHumanWinner) {
-            Triple(stringResource(R.string.winner_you), stringResource(R.string.result_win_message), result.player.name)
+            Triple(
+                stringResource(R.string.winner_you),
+                stringResource(R.string.result_win_message),
+                result.player.name
+            )
         } else {
-            Triple(stringResource(R.string.winner_ai), stringResource(R.string.result_loss_message), result.player.name)
+            Triple(
+                stringResource(R.string.winner_ai),
+                stringResource(R.string.result_loss_message),
+                result.player.name
+            )
         }
+
         UiResult.InProgress -> return
     }
     AlertDialog(
         onDismissRequest = {},
         confirmButton = {},
         title = {
-            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Box(
-                    Modifier.size(56.dp)
+                    Modifier
+                        .size(56.dp)
                         .clip(CircleShape)
                         .background(MaterialTheme.colorScheme.tertiary),
                     contentAlignment = Alignment.Center
@@ -551,17 +629,37 @@ private fun ResultDialog(result: UiResult) {
                     )
                 }
                 Spacer(Modifier.height(16.dp))
-                Text(title, style = androidx.compose.material3.MaterialTheme.typography.headlineSmall)
+                Text(
+                    title,
+                    style = MaterialTheme.typography.headlineSmall
+                )
             }
         },
-        text = { Text(message, modifier = Modifier.fillMaxWidth(), textAlign = androidx.compose.ui.text.style.TextAlign.Center) }
+        text = {
+            Text(
+                message,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+            )
+        }
     )
 }
 
 @Composable
 private fun gameModeTitle(mode: ir.sharif.xo.engine.GameMode): String = when (mode) {
     ir.sharif.xo.engine.GameMode.TWO_PLAYERS -> stringResource(R.string.mode_title_two_players)
-    ir.sharif.xo.engine.GameMode.VS_AI_EASY -> stringResource(R.string.mode_title_ai, stringResource(R.string.difficulty_easy))
-    ir.sharif.xo.engine.GameMode.VS_AI_MEDIUM -> stringResource(R.string.mode_title_ai, stringResource(R.string.difficulty_medium))
-    ir.sharif.xo.engine.GameMode.VS_AI_IMPOSSIBLE -> stringResource(R.string.mode_title_ai, stringResource(R.string.difficulty_impossible))
+    ir.sharif.xo.engine.GameMode.VS_AI_EASY -> stringResource(
+        R.string.mode_title_ai,
+        stringResource(R.string.difficulty_easy)
+    )
+
+    ir.sharif.xo.engine.GameMode.VS_AI_MEDIUM -> stringResource(
+        R.string.mode_title_ai,
+        stringResource(R.string.difficulty_medium)
+    )
+
+    ir.sharif.xo.engine.GameMode.VS_AI_IMPOSSIBLE -> stringResource(
+        R.string.mode_title_ai,
+        stringResource(R.string.difficulty_impossible)
+    )
 }

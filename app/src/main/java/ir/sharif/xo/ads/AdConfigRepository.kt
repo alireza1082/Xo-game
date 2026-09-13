@@ -50,7 +50,7 @@ class DataStoreAdConfigRepository(
         dataStore.edit { it[Keys.provider] = provider.wireValue }
     }
 
-    override suspend fun refreshFromRemote(): AdProvider? {
+    override suspend fun refreshFromRemote(): AdProvider {
         val parsed = try {
             if (remoteConfigUrl.isBlank()) {
                 null

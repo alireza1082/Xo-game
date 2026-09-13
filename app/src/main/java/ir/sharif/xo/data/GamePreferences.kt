@@ -82,14 +82,14 @@ class GamePreferences(context: Context) {
                     GameMode.VS_AI_IMPOSSIBLE -> Triple(Keys.aiImpossibleWins, Keys.aiImpossibleLosses, Keys.aiImpossibleDraws)
                     GameMode.TWO_PLAYERS -> return@edit
                 }
-                when {
-                    winner == humanPlayer -> {
+                when (winner) {
+                    humanPlayer -> {
                         preferences[keys.first] = (preferences[keys.first] ?: 0) + 1
                         val streak = (preferences[Keys.currentStreak] ?: 0) + 1
                         preferences[Keys.currentStreak] = streak
                         if (streak > (preferences[Keys.bestStreak] ?: 0)) preferences[Keys.bestStreak] = streak
                     }
-                    winner == humanPlayer.opponent() -> {
+                    humanPlayer.opponent() -> {
                         preferences[keys.second] = (preferences[keys.second] ?: 0) + 1
                         preferences[Keys.currentStreak] = 0
                     }

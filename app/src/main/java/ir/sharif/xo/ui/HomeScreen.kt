@@ -88,11 +88,11 @@ fun HomeScreen(
             modifier = Modifier.size(96.dp)
         )
         Spacer(Modifier.height(18.dp))
-        Text(stringResource(R.string.app_name), style = androidx.compose.material3.MaterialTheme.typography.displaySmall)
+        Text(stringResource(R.string.app_name), style = MaterialTheme.typography.displaySmall)
         Text(
             stringResource(R.string.app_tagline),
-            color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,
-            style = androidx.compose.material3.MaterialTheme.typography.bodyMedium
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = MaterialTheme.typography.bodyMedium
         )
         Spacer(Modifier.height(48.dp))
         Button(
@@ -270,7 +270,7 @@ private fun DifficultyOption(
             color = if (selected) backgroundColor else MaterialTheme.colorScheme.outlineVariant
         )
     ) {
-        androidx.compose.foundation.layout.Box(
+        Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
@@ -363,7 +363,7 @@ private fun SymbolOption(
 /**
  * Temporary ad verification surface. Exercises all ad types against the selected provider and
  * reports the exact [AdResult] so failures can be diagnosed. Delete this and its entry button in
- * [HomeScreen] once provider behaviour has been confirmed.
+ * [HomeScreen] once provider behavior has been confirmed.
  */
 @Composable
 private fun AdTesterDialog(onDismiss: () -> Unit) {

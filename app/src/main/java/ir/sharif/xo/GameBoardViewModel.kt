@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 class GameBoardViewModel(
     val gameMode: GameMode,
@@ -97,7 +98,7 @@ class GameBoardViewModel(
         val generation = ++aiGeneration
         _uiState.update { it.copy(isInputLocked = true) }
         aiJob = viewModelScope.launch {
-            delay(AI_MOVE_DELAY_MS)
+            delay(AI_MOVE_DELAY_MS.milliseconds)
             if (!isActive || generation != aiGeneration) return@launch
             if (!game.gameResult.isGameOver && game.activePlayer == aiPlayer) {
                 val move = TicTacToeAi.getBestMove(game, gameMode, aiPlayer)
@@ -114,7 +115,12 @@ class GameBoardViewModel(
     private fun finishRound(result: GameResult) {
         roundCount++
         val winner = result.winner
-        _uiState.update { it.copy(isInputLocked = true, result = result.toUiResult(humanPlayer, gameMode)) }
+        _uiState.update {
+            it.copy(
+                isInputLocked = true,
+                result = result.toUiResult(humanPlayer, gameMode)
+            )
+        }
         if (winner != null) {
             _effects.tryEmit(GameEffect.WinLine(winner, result.winningIndices ?: intArrayOf()))
             if (gameMode.isAiMode && winner != humanPlayer) soundManager?.playDraw() else soundManager?.playWin()
@@ -124,14 +130,14 @@ class GameBoardViewModel(
         viewModelScope.launch {
             preferences?.recordGameResult(gameMode, humanPlayer, result.winner)
         }
-        if (roundCount % 5 == 0) {
-            _effects.tryEmit(GameEffect.ShowVideoAd)
+        if (roundCount % 8 == 0) {
+            _effects.tryEmit(GameEffect.ShowInterstitialAd)
         }
         resultJob?.cancel()
         resultJob = viewModelScope.launch {
-            delay(GAME_OVER_DIALOG_DELAY_MS)
+            delay(GAME_OVER_DIALOG_DELAY_MS.milliseconds)
             _effects.emit(GameEffect.ShowResult)
-            delay(GAME_OVER_RESULT_VISIBLE_MS)
+            delay(GAME_OVER_RESULT_VISIBLE_MS.milliseconds)
             _effects.emit(GameEffect.HideResult)
             startNewRound()
         }
@@ -245,7 +251,10 @@ data class GameUiState(
 @Immutable
 data class UiCell(val player: Player?) {
     val isEmpty: Boolean get() = player == null
-    companion object { val Empty = UiCell(null) }
+
+    companion object {
+        val Empty = UiCell(null)
+    }
 }
 
 sealed interface UiResult {
@@ -260,7 +269,26 @@ sealed interface GameEffect {
     data object HideResult : GameEffect
     data object ShowVideoAd : GameEffect
     data object ShowInterstitialAd : GameEffect
-    data class WinLine(val player: Player, val indices: IntArray) : GameEffect
+    data class WinLine(val player: Player, val indices: IntArray) : GameEffect {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as WinLine
+
+            if (player != other.player) return false
+            if (!indices.contentEquals(other.indices)) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = player.hashCode()
+            result = 31 * result + indices.contentHashCode()
+            return result
+        }
+    }
+
     data class SoundChanged(val enabled: Boolean) : GameEffect
 }
 

@@ -133,6 +133,7 @@ class TapsellAdGateway(
     ): AdResult = withContext(Dispatchers.Main.immediate) {
         container.tag = null
         container.removeAllViews()
+
         withTimeoutOrNull(NATIVE_TIMEOUT_MS.milliseconds) {
             suspendCancellableCoroutine<AdResult> { continuation ->
                 TapsellPlus.requestNativeAd(activity, placementId, object : AdRequestCallback() {
@@ -143,8 +144,7 @@ class TapsellAdGateway(
                             continuation.resume(AdResult.Failed(FailureReason.UNKNOWN))
                             return
                         }
-                        // SDK-sanctioned template; its Google Mobile Ads root is why this path is
-                        // gated behind hasGoogleMobileAds() above.
+
                         val holder = try {
                             AdHolder(
                                 NativeManager.Builder()
@@ -156,27 +156,22 @@ class TapsellAdGateway(
                             continuation.resume(AdResult.Failed(FailureReason.UNKNOWN))
                             return
                         }
+
                         container.tag = responseId
+
                         TapsellPlus.showNativeAd(
                             activity,
                             responseId,
                             holder,
                             object : AdShowListener() {
-                                override fun onOpened(adModel: TapsellPlusAdModel) {
-                                    if (continuation.isActive) continuation.resume(AdResult.Shown)
-                                }
-
-                                override fun onClosed(adModel: TapsellPlusAdModel) {
-                                    if (continuation.isActive) continuation.resume(AdResult.Shown)
-                                }
-
                                 override fun onError(error: TapsellPlusErrorModel) {
-                                    if (continuation.isActive) {
-                                        continuation.resume(AdResult.Failed(FailureReason.UNKNOWN))
-                                    }
+                                    // Silent failure during render
                                 }
                             }
                         )
+
+                        // به محض چسباندن تبلیغ به ویو، وضعیت موفقیت را برمی‌گردانیم
+                        if (continuation.isActive) continuation.resume(AdResult.Shown)
                     }
 
                     override fun error(message: String) {

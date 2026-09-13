@@ -38,7 +38,7 @@ android {
         versionName = "2.0.0"
 
         buildConfigField("String", "AD_PROVIDER", buildConfigString("AD_PROVIDER", defaultValue = "mixed"))
-        buildConfigField("String", "TAPSELL_APP_ID", buildConfigString("TAPSELL_KEY", "TAPSELL_APP_ID"))
+        buildConfigField("String", "TAPSELL_APP_ID", buildConfigString("TAPSELL_KEY_XO", "TAPSELL_APP_ID"))
         buildConfigField("String", "ADIVERY_APP_ID", buildConfigString("ADIVERY_KEY", "ADIVERY_APP_ID"))
         buildConfigField("String", "AD_REMOTE_CONFIG_URL", buildConfigString("AD_REMOTE_CONFIG_URL"))
         buildConfigField("String", "SENTRY_DSN", buildConfigString("SENTRY_DSN_XO", "SENTRY_DSN"))
@@ -102,6 +102,7 @@ dependencies {
     implementation(libs.sentry.android)
     implementation(libs.tapsell.plus)
     implementation(libs.adivery.sdk)
+    implementation(libs.play.services.ads)
 
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
