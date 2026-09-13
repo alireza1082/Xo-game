@@ -110,14 +110,16 @@ fun HomeScreen(
             TextButton(onClick = onOpenAbout) { Text(stringResource(R.string.about_button)) }
         }
         Spacer(Modifier.height(24.dp))
-        // Debug-only entry point for the ad tester. Remove together with AdTesterDialog before release.
-        OutlinedButton(
-            onClick = { showAdTester = true },
-            modifier = Modifier.fillMaxWidth().height(48.dp)
-        ) { Text("Debug: Test Ads") }
+        if (BuildConfig.DEBUG) {
+            // Debug-only entry point for the ad tester.
+            OutlinedButton(
+                onClick = { showAdTester = true },
+                modifier = Modifier.fillMaxWidth().height(48.dp)
+            ) { Text("Debug: Test Ads") }
+        }
     }
 
-    if (showAdTester) {
+    if (BuildConfig.DEBUG && showAdTester) {
         AdTesterDialog(onDismiss = { showAdTester = false })
     }
 
